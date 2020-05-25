@@ -1,0 +1,446 @@
+openapi: 3.0.0
+info:
+  title: terminals
+  version: '1.0'
+  description: A backend service to enable a cloud orchestrated Terminal solution for POS systems
+  contact:
+    name: Salt Group
+servers:
+  - url: 'http://localhost:3100'
+paths:
+  /terminals:
+    post:
+      summary: Create Terminal
+      operationId: createTerminal
+      responses:
+        '200':
+          description: OK
+      description: Register a valid terminal with the service. This is required before any other operation can be completed for this terminal.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                terminalId:
+                  type: string
+      tags:
+        - admin
+      parameters: []
+      security:
+        - Authorization: []
+  '/terminals/{terminalId}/fcm_token':
+    put:
+      summary: Set Firebase Cloud Messaging Token
+      operationId: setFcmToken
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      tags:
+        - terminal
+      description: 'Set the current Firebase Cloud Messaging Token to be used to push notifications to the terminal. If a token has not been provided before, this will set it. If a token has already been provided, this will replace it.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+        description: ''
+      security:
+        - Authorization: []
+    parameters:
+      - schema:
+          type: string
+          minLength: 8
+          maxLength: 8
+        name: terminalId
+        in: path
+        required: true
+        description: Terminal ID of the terminal to update
+  '/terminals/{terminalId}/transactions':
+    parameters:
+      - schema:
+          type: string
+          minLength: 8
+          maxLength: 8
+        name: terminalId
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which to initiate the transaction
+    post:
+      summary: Start Transaction
+      operationId: startTransaction
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDetailsResponse'
+        '404':
+          description: Terminal not found for the requesting merchant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error for when the service itself fails.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '502':
+          description: For when the request to Firebase fails
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Request to Firebase timed out:
+                  value:
+                    responseCode: -100
+                    responseMsg: Connection timeout while calling Firebase
+      description: 'Intiate a request to a terminal to perform a transaction. If the terminal exists and is linked to the merchant making the request, on object containing only the Transaction ID will be pushed to the terminal and a TransactionDetails response will be returned. The terminal will then call getTransaction to fetch the transaction details.'
+      tags:
+        - pos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+            examples: {}
+      security:
+        - Authorization: []
+  '/terminals/{terminalId}/transactions/{transactionId}':
+    parameters:
+      - schema:
+          type: string
+          minLength: 8
+          maxLength: 8
+        name: terminalId
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which the transaction took place
+      - schema:
+          type: number
+        name: transactionId
+        in: path
+        required: true
+        description: Transaction ID of the transaction for which to retrieve the data
+    get:
+      summary: Get Transaction Details
+      tags:
+        - pos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDetailsResponse'
+        '404':
+          description: Terminal or transaction not found for the requesting merchant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      operationId: getTransaction
+      description: Get all the available details of the transaction.
+      security:
+        - Authorization: []
+    patch:
+      summary: Update Transaction Details
+      operationId: updateTransaction
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: 'Bad request, when field validation fails.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      tags:
+        - terminal
+      description: 'Update the details of the transaction with the outcome of the terminal processing. '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                authCode:
+                  type: string
+                cardSchemeName:
+                  type: string
+                cardMaskedNumber:
+                  type: string
+                  maxLength: 19
+                cardEntryMode:
+                  type: string
+                  enum:
+                    - manual
+                    - magstripe
+                    - chip
+                    - contactless_magstripe
+                    - contactless_chip
+                    - other
+                state:
+                  type: string
+                tipAmount:
+                  type: number
+                totalAmount:
+                  type: number
+                cardVerificationType:
+                  type: string
+                terminalTransactionId:
+                  type: string
+              required:
+                - state
+        description: The state must be provided in all update calls. The card fields are required when the state is DECLINED or APPROVED. The authCode field is required when the state is APPROVED.
+      security:
+        - Authorization: []
+  '/terminals/{terminalId}/transactions/{transactionId}/state':
+    parameters:
+      - schema:
+          type: string
+          minLength: 8
+          maxLength: 8
+        name: terminalId
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which the transaction took place
+      - schema:
+          type: number
+        name: transactionId
+        in: path
+        required: true
+        description: Transaction ID of the transaction for which to retrieve the data
+    get:
+      summary: Get Transaction State
+      tags:
+        - pos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: string
+        '404':
+          description: Terminal or transaction not found for the requesting merchant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      operationId: getTransactionState
+      description: Get only the state of the transaction. This can be used to poll while looking for a change in state.
+      security:
+        - Authorization: []
+  '/terminals/{terminalId}/transactions/{transactionId}/events':
+    parameters:
+      - schema:
+          type: string
+          minLength: 8
+          maxLength: 8
+        name: terminalId
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which the transaction took place
+      - schema:
+          type: number
+        name: transactionId
+        in: path
+        required: true
+        description: Transaction ID of the transaction for which to retrieve the data
+    get:
+      summary: Get Transaction Event Stream
+      tags: []
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            text/event-stream:
+              schema:
+                type: object
+                properties:
+                  event:
+                    type: string
+                    enum:
+                      - state_update
+                  data:
+                    type: string
+              examples: {}
+        '404':
+          description: Terminal or transaction not found for the requesting merchant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      operationId: getTransactionStateUpdates
+      description: '(Proposal) Get an event stream of Server Sent Events (SSEs) for updates on the transaction processing. Currently only an event of type "state_update" is available. For this event, the data will be the state, e.g. "PROCESSING", "APPROVED", "DECLINED". '
+      security:
+        - Authorization: []
+components:
+  schemas:
+    TransactionDetails:
+      title: TransactionDetails
+      type: object
+      properties:
+        transactionId:
+          type: number
+        totalAmount:
+          type: number
+          description: 'Total Transaction Amount, including tip.'
+        tipAmount:
+          type: number
+          description: Tip Amount.
+        state:
+          type: string
+        cardEntryMode:
+          type: string
+          enum:
+            - manual
+            - magstripe
+            - chip
+            - contactless_magstripe
+            - contactless_chip
+            - other
+        cardMaskedNumber:
+          type: string
+          minLength: 8
+          maxLength: 19
+        cardSchemeName:
+          type: string
+        authCode:
+          type: string
+        posTransactionId:
+          type: string
+          description: Transaction ID as provided by the POS for support purposes.
+        currency:
+          type: string
+          description: ISO 4217 Alpha-3 currency code
+        requestAmount:
+          type: number
+          description: 'Requested Transaction Amount, excluding tip.'
+        cardVerificationType:
+          type: string
+        terminalTransactionId:
+          type: string
+        cashierId:
+          type: string
+          description: ''
+      required:
+        - id
+        - state
+        - posTransactionId
+        - currency
+        - requestAmount
+      description: This object describes the general list of fields relevant when retrieving a transaction.
+    TransactionRequest:
+      title: TransactionRequest
+      type: object
+      description: 'The object that describes a request to the terminal service to start a transaction. '
+      properties:
+        cashierId:
+          type: string
+          description: ''
+        posTransactionId:
+          type: string
+          description: Transaction ID as provided by the POS for support purposes.
+        currency:
+          type: string
+          description: ISO 4217 Alpha-3 currency code
+        promptTip:
+          type: boolean
+        totalAmount:
+          type: number
+          description: 'Total Transaction Amount. Required if prompt tip is false, otherwise equal to requestAmount.'
+        tipAmount:
+          type: number
+          description: 'Tip Amount. Required if promptTip is false, otherwise 0 (zero)'
+        requestAmount:
+          type: number
+          description: 'Requested Transaction Amount, excluding possible tip.'
+        transactionType:
+          type: string
+          enum:
+            - payment
+            - refund
+      required:
+        - posTransactionId
+        - currency
+        - promptTip
+        - requestAmount
+    TransactionDetailsResponse:
+      title: TransactionDetailsResponse
+      type: object
+      description: The API level response object that contains transaction details.
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        transactionDetails:
+          $ref: '#/components/schemas/TransactionDetails'
+    ApiResponse:
+      title: ApiResponse
+      type: object
+      description: 'Base API response object used for all API responses. This can include cases when there are server errors, as the responseCode allows for finer grained error reporting than the HTTP status alone.'
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      description: ''
+tags:
+  - name: admin
+    description: Administer the terminals managed by the service
+    externalDocs:
+      url: 'http://terminals.somewhere.com/admin.htm'
+  - name: pos
+    description: Methods available to POS systems
+    externalDocs:
+      url: 'http://terminals.somewhere.com/pos.htm'
+  - name: terminal
+    description: Methods available to terminals
+    externalDocs:
+      url: 'http://terminals.somewhere.com/terminals.htm'
+  - name: model
+    description: Data models used by the API
+    externalDocs:
+      url: 'http://terminals.somewhere.com/models.htm'
