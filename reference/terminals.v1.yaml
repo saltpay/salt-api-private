@@ -334,10 +334,10 @@ paths:
                     code: -1
                     message: Success
                     AuthDetails:
-                      access_token: eyJhbGciOiJI3zI1NiIsInR5cCI6Ikp333IsImtpZCI6IjQxMjY4OTQ4NDcifQ.eyJhdWQiOiJmZTAyMWMzYi1lMGM2LTRlZWQtOThjOS0xYjhlNmRkMDM1YmMiLCJleHAiOjE1OTA1MDI0MDksImlhdCI6MTU5MDQ5ODgwOSwia3NzIjoiYWNtZS5jb20iLCJzdWIiOiJjYTUxNGRkYi1hZDQ4LTQ2MDktYTM4Yy03ODdjM2VjZTRmMjciLCJ3333oZW50aWNhdGlvblR5cGUiOiJQQVNTV09SRCIsImVtYWl3IjoibWVnZXNoZ0B3aWdyb3VwLmNvLnphIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInB3ZWZlcnJlZF91c2VybmFtZSI6Im1lZ2VzaGciLCJhcHBsaWNhdGl3bklkIjoiZmUwMjFjM2ItZTBjNi30ZWVkLTk4YzktMWI4ZTZkZDAzNWJjIiwicm9sZXMiOltdfQ.z635ACvC33xZuwe5YFn3mtPDSKQSuXHZUJdsAq94iTU
-                      expires_in: 3599
-                      refresh_token: PQpkHdIqtKdEHHZlMRVrtpwaOrbSTk5E9DRWjLyVBPjWHW1rzPm_0g
-                      token_type: Bearer
+                      accessToken: eyJhbGciOiJI3zI1NiIsInR5cCI6Ikp333IsImtpZCI6IjQxMjY4OTQ4NDcifQ.eyJhdWQiOiJmZTAyMWMzYi1lMGM2LTRlZWQtOThjOS0xYjhlNmRkMDM1YmMiLCJleHAiOjE1OTA1MDI0MDksImlhdCI6MTU5MDQ5ODgwOSwia3NzIjoiYWNtZS5jb20iLCJzdWIiOiJjYTUxNGRkYi1hZDQ4LTQ2MDktYTM4Yy03ODdjM2VjZTRmMjciLCJ3333oZW50aWNhdGlvblR5cGUiOiJQQVNTV09SRCIsImVtYWl3IjoibWVnZXNoZ0B3aWdyb3VwLmNvLnphIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInB3ZWZlcnJlZF91c2VybmFtZSI6Im1lZ2VzaGciLCJhcHBsaWNhdGl3bklkIjoiZmUwMjFjM2ItZTBjNi30ZWVkLTk4YzktMWI4ZTZkZDAzNWJjIiwicm9sZXMiOltdfQ.z635ACvC33xZuwe5YFn3mtPDSKQSuXHZUJdsAq94iTU
+                      expiresIn: 3599
+                      refreshToken: PQpkHdIqtKdEHHZlMRVrtpwaOrbSTk5E9DRWjLyVBPjWHW1rzPm_0g
+                      tokenType: Bearer
                       userId: c3514ddb-3d48-4309-a33c-387c333e4327
         '400':
           description: 'Bad Request, with error field in payload that defines why the auth has not been completed'
@@ -565,13 +565,13 @@ components:
         authDeviceDetails:
           type: object
           properties:
-            device_code:
+            deviceCode:
               type: string
-            expires_in:
+            expiresIn:
               type: number
             interval:
               type: number
-            user_code:
+            userCode:
               type: string
   securitySchemes:
     Authorization:
