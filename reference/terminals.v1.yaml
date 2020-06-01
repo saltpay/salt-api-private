@@ -419,8 +419,50 @@ paths:
                   type: string
                 userCode:
                   type: string
+                mid:
+                  type: string
+              required:
+                - clientId
+                - userCode
+                - mid
       tags:
         - terminal
+  '/terminals/{temrinalId}/auth/refresh':
+    parameters:
+      - schema:
+          type: string
+        name: temrinalId
+        in: path
+        required: true
+    post:
+      summary: Request new JWT based on valid Refresh Token
+      operationId: refreshJWT
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  message:
+                    type: string
+                  refreshTokenReponse:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+      description: Retrieve a new valid JWT using a valid Refresh Token retrieved previously
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
 components:
   schemas:
     TransactionDetails:
