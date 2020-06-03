@@ -511,11 +511,24 @@ components:
           description: 'Requested Transaction Amount, excluding tip.'
         cardVerificationType:
           type: string
+          enum:
+            - undefined
+            - signature
+            - pin
+            - pin_signature
+            - failed
+            - not_required
+            - other
         terminalTransactionId:
           type: string
         cashierId:
           type: string
           description: ''
+        transactionType:
+          type: string
+          enum:
+            - payment
+            - refund
       required:
         - state
         - posTransactionId
@@ -556,6 +569,7 @@ components:
         - currency
         - promptTip
         - requestAmount
+        - transactionType
     TransactionDetailsResponse:
       title: TransactionDetailsResponse
       type: object

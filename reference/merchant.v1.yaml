@@ -28,10 +28,10 @@ paths:
             schema:
               type: object
               properties:
-                merchantId:
+                mid:
                   type: string
               required:
-                - merchantId
+                - mid
         description: MID for the merchant auth account being created
 components:
   schemas:
