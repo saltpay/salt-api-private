@@ -466,11 +466,37 @@ paths:
       tags:
         - terminal
         - pos
+  /merchants:
+    post:
+      summary: Create  merchant auth account
+      operationId: createMerchantAuthAccount
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      tags:
+        - merchant
+      description: Each merchant created within the portal will require system credentials that APIs may use to authenticate on behalf of the merchant. The credentials are created in Fusion Auth with a preset creation definition.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                merchantId:
+                  type: string
+              required:
+                - merchantId
+        description: MID for the merchant auth account being created
 components:
   schemas:
     TransactionDetails:
       title: TransactionDetails
       type: object
+      description: This object describes the general list of fields relevant when retrieving a transaction.
       properties:
         transactionId:
           type: number
@@ -516,12 +542,10 @@ components:
           type: string
           description: ''
       required:
-        - id
         - state
         - posTransactionId
         - currency
         - requestAmount
-      description: This object describes the general list of fields relevant when retrieving a transaction.
     TransactionRequest:
       title: TransactionRequest
       type: object
@@ -624,6 +648,10 @@ components:
       scheme: bearer
       description: ''
 tags:
+  - name: merchant
+    description: Administer the merchants managed by the service
+    externalDocs:
+      url: 'http://terminals.somewhere.com/admin.htm'
   - name: admin
     description: Administer the terminals managed by the service
     externalDocs:
