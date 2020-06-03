@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: merchant
+  version: '1.0'
+  description: A backend service to enable a cloud orchestrated Terminal solution for POS systems
+  contact:
+    name: Salt Group
+servers:
+  - url: 'http://localhost:3100'
+paths:
+  /merchants:
+    post:
+      summary: Create  merchant auth account
+      operationId: createMerchantAuthAccount
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      tags:
+        - merchant
+      description: Each merchant created within the portal will require system credentials that APIs may use to authenticate on behalf of the merchant. The credentials are created in Fusion Auth with a preset creation definition.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                merchantId:
+                  type: string
+              required:
+                - merchantId
+        description: MID for the merchant auth account being created
+components:
+  schemas:
+    ApiResponse:
+      title: ApiResponse
+      type: object
+      description: 'Base API response object used for all API responses. This can include cases when there are server errors, as the responseCode allows for finer grained error reporting than the HTTP status alone.'
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      description: ''
+tags:
+  - name: merchant
+    description: Administer the merchants managed by the service
+    externalDocs:
+      url: 'http://terminals.somewhere.com/admin.htm'
+  - name: admin
+    description: Administer the terminals managed by the service
+    externalDocs:
+      url: 'http://terminals.somewhere.com/admin.htm'
+  - name: pos
+    description: Methods available to POS systems
+    externalDocs:
+      url: 'http://terminals.somewhere.com/pos.htm'
+  - name: terminal
+    description: Methods available to terminals
+    externalDocs:
+      url: 'http://terminals.somewhere.com/terminals.htm'
+  - name: model
+    description: Data models used by the API
+    externalDocs:
+      url: 'http://terminals.somewhere.com/models.htm'
