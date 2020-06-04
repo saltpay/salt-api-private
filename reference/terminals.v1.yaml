@@ -449,7 +449,7 @@ paths:
                     type: number
                   message:
                     type: string
-                  refreshTokenReponse:
+                  refreshTokenResponse:
                     type: object
                     properties:
                       token:
