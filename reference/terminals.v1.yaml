@@ -541,6 +541,8 @@ paths:
                   enum:
                     - active
                     - inactive
+      tags:
+        - terminal
 components:
   schemas:
     TransactionDetails:
