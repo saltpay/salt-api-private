@@ -22,14 +22,22 @@ paths:
             schema:
               type: object
               properties:
-                terminalId:
+                terminalGuid:
+                  type: string
+                description:
+                  type: string
+                name:
+                  type: string
+                state:
+                  type: string
+                token:
                   type: string
       tags:
         - admin
       parameters: []
       security:
         - Authorization: []
-  '/terminals/{terminalId}/notification_token':
+  '/terminals/{terminalGuid}/notification_token':
     put:
       summary: Set Firebase Cloud Messaging Token
       operationId: setNotificationToken
@@ -61,17 +69,17 @@ paths:
           type: string
           minLength: 8
           maxLength: 8
-        name: terminalId
+        name: terminalGuid
         in: path
         required: true
         description: Terminal ID of the terminal to update
-  '/terminals/{terminalId}/transactions':
+  '/terminals/{terminalGuid}/transactions':
     parameters:
       - schema:
           type: string
           minLength: 8
           maxLength: 8
-        name: terminalId
+        name: terminalGuid
         in: path
         required: true
         description: Terminal ID of the terminal on which to initiate the transaction
@@ -119,13 +127,13 @@ paths:
             examples: {}
       security:
         - Authorization: []
-  '/terminals/{terminalId}/transactions/{transactionId}':
+  '/terminals/{terminalGuid}/transactions/{transactionId}':
     parameters:
       - schema:
           type: string
           minLength: 8
           maxLength: 8
-        name: terminalId
+        name: terminalGuid
         in: path
         required: true
         description: Terminal ID of the terminal on which the transaction took place
@@ -214,13 +222,13 @@ paths:
         description: The state must be provided in all update calls. The card fields are required when the state is DECLINED or APPROVED. The authCode field is required when the state is APPROVED.
       security:
         - Authorization: []
-  '/terminals/{terminalId}/transactions/{transactionId}/state':
+  '/terminals/{terminalGuid}/transactions/{transactionId}/state':
     parameters:
       - schema:
           type: string
           minLength: 8
           maxLength: 8
-        name: terminalId
+        name: terminalGuid
         in: path
         required: true
         description: Terminal ID of the terminal on which the transaction took place
@@ -260,13 +268,13 @@ paths:
       description: Get only the state of the transaction. This can be used to poll while looking for a change in state.
       security:
         - Authorization: []
-  '/terminals/{terminalId}/transactions/{transactionId}/events':
+  '/terminals/{terminalGuid}/transactions/{transactionId}/events':
     parameters:
       - schema:
           type: string
           minLength: 8
           maxLength: 8
-        name: terminalId
+        name: terminalGuid
         in: path
         required: true
         description: Terminal ID of the terminal on which the transaction took place
@@ -311,11 +319,11 @@ paths:
       description: '(Proposal) Get an event stream of Server Sent Events (SSEs) for updates on the transaction processing. Currently only an event of type "state_update" is available. For this event, the data will be the state, e.g. "PROCESSING", "APPROVED", "DECLINED". '
       security:
         - Authorization: []
-  '/terminals/{terminalId}/auth/token':
+  '/terminals/{terminalGuid}/auth/token':
     parameters:
       - schema:
           type: string
-        name: terminalId
+        name: terminalGuid
         in: path
         required: true
     post:
@@ -369,11 +377,11 @@ paths:
         description: 'All fields are mandatory, device_code is retrieved on the /auth/device endpoint and the client_id is a config value represent the application in Fusion Auth'
       tags:
         - terminal
-  '/terminals/{terminalId}/auth/device':
+  '/terminals/{terminalGuid}/auth/device':
     parameters:
       - schema:
           type: string
-        name: terminalId
+        name: terminalGuid
         in: path
         required: true
     post:
@@ -397,41 +405,11 @@ paths:
                   type: string
       tags:
         - terminal
-  /terminals/authorise:
-    post:
-      summary: Authorise Terminal Access
-      operationId: authoriseTerminal
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-      description: Authorise access for terminal based on a supplied user code for a specific merchant
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                clientId:
-                  type: string
-                userCode:
-                  type: string
-                mid:
-                  type: string
-              required:
-                - clientId
-                - userCode
-                - mid
-      tags:
-        - terminal
-  '/terminals/{temrinalId}/auth/refresh':
+  '/terminals/{terminalGuid}/auth/refresh':
     parameters:
       - schema:
           type: string
-        name: temrinalId
+        name: terminalGuid
         in: path
         required: true
     post:
@@ -466,6 +444,103 @@ paths:
       tags:
         - terminal
         - pos
+  /terminals/link:
+    post:
+      summary: Link Terminal
+      operationId: linkTerminal
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  message:
+                    type: string
+                  terminalDetailsResponse:
+                    $ref: '#/components/schemas/TerminalDetailsResponse'
+      description: Link terminal to mGuid and authorise access for the device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                merchantGuid:
+                  type: string
+                userCode:
+                  type: string
+                clientId:
+                  type: string
+              required:
+                - merchantGuid
+                - userCode
+                - clientId
+      tags:
+        - terminal
+  '/terminals/{terminalGuid}':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+    get:
+      summary: Get temrinal details
+      tags:
+        - terminal
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  message:
+                    type: string
+                  terminalDetailsResponse:
+                    $ref: '#/components/schemas/TerminalDetailsResponse'
+      operationId: getTerminal
+      description: Get details for a specific terminal
+    patch:
+      summary: Update terminal info
+      operationId: updateTerminalInformation
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  message:
+                    type: string
+                  terminalDetailsResponse:
+                    $ref: '#/components/schemas/TerminalDetailsResponse'
+      description: 'Update terminal information, currently only allowing the update of description, name and state'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                state:
+                  type: string
+                  enum:
+                    - active
+                    - inactive
 components:
   schemas:
     TransactionDetails:
@@ -631,6 +706,20 @@ components:
               type: number
             userCode:
               type: string
+    TerminalDetailsResponse:
+      title: TerminalDetailsResponse
+      type: object
+      properties:
+        terminalGuid:
+          type: string
+        description:
+          type: string
+        name:
+          type: string
+        state:
+          type: string
+        token:
+          type: string
   securitySchemes:
     Authorization:
       type: http
