@@ -455,6 +455,11 @@ paths:
                     properties:
                       token:
                         type: string
+                      refreshToken:
+                        type: string
+                    required:
+                      - token
+                      - refreshToken
       description: Retrieve a new valid JWT using a valid Refresh Token retrieved previously
       requestBody:
         content:
@@ -566,6 +571,13 @@ paths:
                     - inactive
       tags:
         - terminal
+  '/terminals/merchant/{merchantGuid}':
+    parameters:
+      - schema:
+          type: string
+        name: merchantGuid
+        in: path
+        required: true
 components:
   schemas:
     TransactionDetails:
