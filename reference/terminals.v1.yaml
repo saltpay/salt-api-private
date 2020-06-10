@@ -18,17 +18,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: number
-                  message:
-                    type: string
-                  terminalDetailsResponse:
-                    type: object
-                    properties:
-                      terminalGuid:
-                        type: string
+                $ref: '#/components/schemas/TerminalDetailsResponse'
       description: Register a valid terminal with the service. This is required before any other operation can be completed for this terminal.
       requestBody:
         content:
@@ -36,30 +26,76 @@ paths:
             schema:
               type: object
               properties:
-                serialNumber:
-                  type: string
-                description:
-                  type: string
                 brand:
+                  type: string
+                model:
+                  type: string
+                serialNumber:
                   type: string
                 state:
                   type: string
                   enum:
                     - active
                     - inactive
-                token:
-                  type: string
-                model:
-                  type: string
               required:
-                - serialNumber
                 - brand
                 - model
+                - serialNumber
+                - state
       tags:
         - admin
       parameters: []
       security:
         - Authorization: []
+    get:
+      summary: ''
+      operationId: getTerminals
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  terminalDetailsList:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TerminalDetailsResponse'
+      tags:
+        - pos
+        - admin
+      description: Fetch a list of terminals
+      security:
+        - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: merchantGuid
+          description: Globally unique ID of the merchant as registered with the service. Required if the application is a pos.
+        - schema:
+            type: string
+          in: query
+          name: serialNumber
+          description: Serial Number to search for
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: pageSize
+          description: Specify in order to retrieve a paged response
+        - schema:
+            type: integer
+            default: 0
+            minimum: 0
+          in: query
+          name: pageOffset
+          description: 'If pageSize is specified, this is the page offset.'
   '/terminals/{terminalGuid}/notification_token':
     put:
       summary: Set Firebase Cloud Messaging Token
@@ -161,7 +197,7 @@ paths:
         required: true
         description: Terminal ID of the terminal on which the transaction took place
       - schema:
-          type: number
+          type: integer
         name: transactionId
         in: path
         required: true
@@ -170,6 +206,7 @@ paths:
       summary: Get Transaction Details
       tags:
         - pos
+        - terminal
       responses:
         '200':
           description: OK
@@ -233,9 +270,9 @@ paths:
                 state:
                   type: string
                 tipAmount:
-                  type: number
+                  type: integer
                 totalAmount:
-                  type: number
+                  type: integer
                 cardVerificationType:
                   type: string
                 terminalTransactionId:
@@ -256,7 +293,7 @@ paths:
         required: true
         description: Terminal ID of the terminal on which the transaction took place
       - schema:
-          type: number
+          type: integer
         name: transactionId
         in: path
         required: true
@@ -302,7 +339,7 @@ paths:
         required: true
         description: Terminal ID of the terminal on which the transaction took place
       - schema:
-          type: number
+          type: integer
         name: transactionId
         in: path
         required: true
@@ -397,7 +434,7 @@ paths:
               required:
                 - deviceCode
                 - clientId
-        description: 'All fields are mandatory, device_code is retrieved on the /auth/device endpoint and the client_id is a config value represent the application in Fusion Auth'
+        description: 'All fields are mandatory, deviceCode is retrieved on the /auth/device endpoint and the clientId is a config value that represents the application in Fusion Auth.'
       tags:
         - terminal
   '/terminals/{terminalGuid}/auth/device':
@@ -447,10 +484,10 @@ paths:
                 type: object
                 properties:
                   code:
-                    type: number
+                    type: integer
                   message:
                     type: string
-                  refreshTokenResponse:
+                  refreshTokenDetails:
                     type: object
                     properties:
                       token:
@@ -471,7 +508,6 @@ paths:
                   type: string
       tags:
         - terminal
-        - pos
   /terminals/link:
     post:
       summary: Link Terminal
@@ -482,15 +518,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: number
-                  message:
-                    type: string
-                  terminalDetailsResponse:
-                    $ref: '#/components/schemas/TerminalDetailsResponse'
-      description: Link terminal to mGuid and authorise access for the device
+                $ref: '#/components/schemas/TerminalDetailsResponse'
+      description: Link terminal to merchantGuid and authorise access for the device.
       requestBody:
         content:
           application/json:
@@ -508,7 +537,9 @@ paths:
                 - userCode
                 - clientId
       tags:
-        - terminal
+        - admin
+      security:
+        - Authorization: []
   '/terminals/{terminalGuid}':
     parameters:
       - schema:
@@ -518,24 +549,19 @@ paths:
         required: true
     get:
       summary: Get temrinal details
-      tags:
-        - terminal
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: number
-                  message:
-                    type: string
-                  terminalDetailsResponse:
-                    $ref: '#/components/schemas/TerminalDetailsResponse'
+                $ref: '#/components/schemas/TerminalDetailsResponse'
       operationId: getTerminal
       description: Get details for a specific terminal
+      tags:
+        - admin
+      security:
+        - Authorization: []
     patch:
       summary: Update terminal info
       operationId: updateTerminalInformation
@@ -545,14 +571,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: number
-                  message:
-                    type: string
-                  terminalDetailsResponse:
-                    $ref: '#/components/schemas/TerminalDetailsResponse'
+                $ref: '#/components/schemas/TerminalDetailsResponse'
       description: 'Update terminal information, currently only allowing the update of description, name and state'
       requestBody:
         content:
@@ -560,8 +579,6 @@ paths:
             schema:
               type: object
               properties:
-                name:
-                  type: string
                 description:
                   type: string
                 state:
@@ -570,14 +587,9 @@ paths:
                     - active
                     - inactive
       tags:
-        - terminal
-  '/terminals/merchant/{merchantGuid}':
-    parameters:
-      - schema:
-          type: string
-        name: merchantGuid
-        in: path
-        required: true
+        - admin
+      security:
+        - Authorization: []
 components:
   schemas:
     TransactionDetails:
@@ -586,12 +598,12 @@ components:
       description: This object describes the general list of fields relevant when retrieving a transaction.
       properties:
         transactionId:
-          type: number
+          type: integer
         totalAmount:
-          type: number
+          type: integer
           description: 'Total Transaction Amount, including tip.'
         tipAmount:
-          type: number
+          type: integer
           description: Tip Amount.
         state:
           type: string
@@ -619,7 +631,7 @@ components:
           type: string
           description: ISO 4217 Alpha-3 currency code
         requestAmount:
-          type: number
+          type: integer
           description: 'Requested Transaction Amount, excluding tip.'
         cardVerificationType:
           type: string
@@ -663,13 +675,13 @@ components:
         promptTip:
           type: boolean
         totalAmount:
-          type: number
+          type: integer
           description: 'Total Transaction Amount. Required if prompt tip is false, otherwise equal to requestAmount.'
         tipAmount:
-          type: number
+          type: integer
           description: 'Tip Amount. Required if promptTip is false, otherwise 0 (zero)'
         requestAmount:
-          type: number
+          type: integer
           description: 'Requested Transaction Amount, excluding possible tip.'
         transactionType:
           type: string
@@ -688,7 +700,7 @@ components:
       description: The API level response object that contains transaction details.
       properties:
         code:
-          type: number
+          type: integer
         message:
           type: string
         transactionDetails:
@@ -699,7 +711,7 @@ components:
       description: 'Base API response object used for all API responses. This can include cases when there are server errors, as the responseCode allows for finer grained error reporting than the HTTP status alone.'
       properties:
         code:
-          type: number
+          type: integer
         message:
           type: string
     AuthTokenResponse:
@@ -708,16 +720,16 @@ components:
       description: ''
       properties:
         code:
-          type: number
+          type: integer
         message:
           type: string
-        authDetails:
+        authTokenDetails:
           type: object
           properties:
             accessToken:
               type: string
             expiresIn:
-              type: number
+              type: integer
             refreshToken:
               type: string
             tokenType:
@@ -729,7 +741,7 @@ components:
       type: object
       properties:
         code:
-          type: number
+          type: integer
         message:
           type: string
         authDeviceDetails:
@@ -738,35 +750,45 @@ components:
             deviceCode:
               type: string
             expiresIn:
-              type: number
+              type: integer
             interval:
-              type: number
+              type: integer
             userCode:
               type: string
-    TerminalDetailsResponse:
-      title: TerminalDetailsResponse
+    TerminalDetails:
+      title: TerminalDetails
       type: object
       properties:
         terminalGuid:
           type: string
         description:
           type: string
-        name:
+        brand:
+          type: string
+        model:
+          type: string
+        serialNumber:
+          type: string
+        merchantGuid:
           type: string
         state:
           type: string
-        token:
+    TerminalDetailsResponse:
+      title: TerminalDetailsResponse
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
           type: string
+        terminalDetails:
+          $ref: '#/components/schemas/TerminalDetails'
   securitySchemes:
     Authorization:
       type: http
       scheme: bearer
       description: ''
 tags:
-  - name: merchant
-    description: Administer the merchants managed by the service
-    externalDocs:
-      url: 'http://terminals.somewhere.com/admin.htm'
   - name: admin
     description: Administer the terminals managed by the service
     externalDocs:
