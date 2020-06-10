@@ -24,8 +24,13 @@ paths:
                     type: number
                   message:
                     type: string
-                  merchantGuid:
-                    type: string
+                  merchantDetails:
+                    type: object
+                    properties:
+                      merchantGuid:
+                        type: string
+                    required:
+                      - merchantGuid
       tags:
         - merchant
       description: Each merchant created within the portal will require system credentials that APIs may use to authenticate on behalf of the merchant. The credentials are created in Fusion Auth with a preset creation definition.
