@@ -65,7 +65,7 @@ paths:
                   terminalDetailsList:
                     type: array
                     items:
-                      $ref: '#/components/schemas/TerminalDetailsResponse'
+                      $ref: '#/components/schemas/TerminalDetails'
       tags:
         - pos
         - admin
