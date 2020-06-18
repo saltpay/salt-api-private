@@ -388,6 +388,58 @@ paths:
         required: true
     post:
       summary: Retrieve Auth Details
+      operationId: retrieveAuthCredentialsWithTerminalGuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokenResponse'
+              examples:
+                Positive Response:
+                  value:
+                    code: -1
+                    message: Success
+                    AuthDetails:
+                      accessToken: eyJhbGciOiJI3zI1NiIsInR5cCI6Ikp333IsImtpZCI6IjQxMjY4OTQ4NDcifQ.eyJhdWQiOiJmZTAyMWMzYi1lMGM2LTRlZWQtOThjOS0xYjhlNmRkMDM1YmMiLCJleHAiOjE1OTA1MDI0MDksImlhdCI6MTU5MDQ5ODgwOSwia3NzIjoiYWNtZS5jb20iLCJzdWIiOiJjYTUxNGRkYi1hZDQ4LTQ2MDktYTM4Yy03ODdjM2VjZTRmMjciLCJ3333oZW50aWNhdGlvblR5cGUiOiJQQVNTV09SRCIsImVtYWl3IjoibWVnZXNoZ0B3aWdyb3VwLmNvLnphIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInB3ZWZlcnJlZF91c2VybmFtZSI6Im1lZ2VzaGciLCJhcHBsaWNhdGl3bklkIjoiZmUwMjFjM2ItZTBjNi30ZWVkLTk4YzktMWI4ZTZkZDAzNWJjIiwicm9sZXMiOltdfQ.z635ACvC33xZuwe5YFn3mtPDSKQSuXHZUJdsAq94iTU
+                      expiresIn: 3599
+                      refreshToken: PQpkHdIqtKdEHHZlMRVrtpwaOrbSTk5E9DRWjLyVBPjWHW1rzPm_0g
+                      tokenType: Bearer
+                      userId: c3514ddb-3d48-4309-a33c-387c333e4327
+        '400':
+          description: 'Bad Request, with error field in payload that defines why the auth has not been completed'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
+                  error_reason:
+                    type: string
+      description: 'Request credentials for device authentication. Once a user code for device linking is provided the terminal will begin to poll this endpoint, in the mean time the user will authorise the user code in the merchant portal and on the success of this, the endpoint will supply authorisation details.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deviceCode:
+                  type: string
+                clientId:
+                  type: string
+              required:
+                - deviceCode
+                - clientId
+        description: 'All fields are mandatory, deviceCode is retrieved on the /auth/device endpoint and the clientId is a config value that represents the application in Fusion Auth.'
+      tags:
+        - terminal
+  /terminals/auth/token:
+    post:
+      summary: Retrieve Auth Details
       operationId: retrieveAuthCredentials
       responses:
         '200':
@@ -446,7 +498,7 @@ paths:
         required: true
     post:
       summary: Request Device Code
-      operationId: requestDeviceCode
+      operationId: requestDeviceCodeWithTerminalGuid
       responses:
         '200':
           description: OK
@@ -465,6 +517,40 @@ paths:
                   type: string
       tags:
         - terminal
+  /terminals/auth/device:
+    post:
+      summary: Request Device Code
+      operationId: requestDeviceCode
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthDeviceResponse'
+      description: Request code for authorising device on merchant profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                brand:
+                  type: string
+                model:
+                  type: string
+                serial:
+                  type: string
+              required:
+                - clientId
+                - model
+                - brand
+                - serial
+        description: Device information for the current device requiring to be authenticated
+      tags:
+        - terminal
   '/terminals/{terminalGuid}/auth/refresh':
     parameters:
       - schema:
@@ -472,6 +558,43 @@ paths:
         name: terminalGuid
         in: path
         required: true
+    post:
+      summary: Request new JWT based on valid Refresh Token
+      operationId: refreshJWTWithTerminal
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  refreshTokenDetails:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                      refreshToken:
+                        type: string
+                    required:
+                      - token
+                      - refreshToken
+      description: Retrieve a new valid JWT using a valid Refresh Token retrieved previously
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+      tags:
+        - terminal
+  /terminals/auth/refresh:
     post:
       summary: Request new JWT based on valid Refresh Token
       operationId: refreshJWT
@@ -754,6 +877,8 @@ components:
             interval:
               type: integer
             userCode:
+              type: string
+            terminalGuid:
               type: string
     TerminalDetails:
       title: TerminalDetails
