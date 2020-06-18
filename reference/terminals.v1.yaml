@@ -269,6 +269,10 @@ paths:
                     - other
                 state:
                   type: string
+                  enum:
+                    - APPROVED
+                    - DECLINED
+                    - CANCELLED
                 tipAmount:
                   type: integer
                 totalAmount:
@@ -279,7 +283,7 @@ paths:
                   type: string
               required:
                 - state
-        description: The state must be provided in all update calls. The card fields are required when the state is DECLINED or APPROVED. The authCode field is required when the state is APPROVED.
+        description: The state must be provided in all update calls. The card fields are required when the state is DECLINED or APPROVED or CANCELLED. The authCode field is required when the state is APPROVED.
       security:
         - Authorization: []
   '/terminals/{terminalGuid}/transactions/{transactionId}/state':
