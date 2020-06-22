@@ -863,6 +863,8 @@ components:
               type: string
             userId:
               type: string
+            terminalGuid:
+              type: string
     AuthDeviceResponse:
       title: AuthDeviceResponse
       type: object
@@ -881,8 +883,6 @@ components:
             interval:
               type: integer
             userCode:
-              type: string
-            terminalGuid:
               type: string
     TerminalDetails:
       title: TerminalDetails
