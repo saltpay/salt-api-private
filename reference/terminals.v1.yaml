@@ -391,7 +391,7 @@ paths:
         in: path
         required: true
     post:
-      summary: Retrieve Auth Details
+      summary: DEPRECATED Retrieve Auth Details
       operationId: retrieveAuthCredentialsWithTerminalGuid
       responses:
         '200':
@@ -501,7 +501,7 @@ paths:
         in: path
         required: true
     post:
-      summary: Request Device Code
+      summary: DEPRECATED Request Device Code
       operationId: requestDeviceCodeWithTerminalGuid
       responses:
         '200':
@@ -563,7 +563,7 @@ paths:
         in: path
         required: true
     post:
-      summary: Request new JWT based on valid Refresh Token
+      summary: DEPRECATED Request new JWT based on valid Refresh Token
       operationId: refreshJWTWithTerminal
       responses:
         '200':
