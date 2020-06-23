@@ -865,6 +865,8 @@ components:
               type: string
             terminalGuid:
               type: string
+            tmsAccessToken:
+              type: string
     AuthDeviceResponse:
       title: AuthDeviceResponse
       type: object
