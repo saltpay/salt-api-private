@@ -1,17 +1,17 @@
 openapi: 3.0.0
 info:
-  title: merchant
+  title: webhooks
   version: '1.0'
-  description: A backend service to enable a cloud orchestrated Terminal solution for POS systems
+  description: A backend service to enable managment of point of sale providers
   contact:
     name: Salt Group
 servers:
-  - url: 'http://localhost:3100'
+  - url: 'http://localhost:3000'
 paths:
-  /merchants:
+  /card_acceptors:
     post:
-      summary: Create  merchant auth account
-      operationId: createMerchantAuthAccount
+      summary: Register card acceptor
+      operationId: createCardAcceptor
       responses:
         '200':
           description: OK
@@ -21,35 +21,26 @@ paths:
                 type: object
                 properties:
                   code:
-                    type: integer
+                    type: number
                   message:
                     type: string
-                  merchantDetails:
+                  posDetails:
                     type: object
                     properties:
-                      merchantGuid:
+                      posGuid:
                         type: string
                     required:
-                      - merchantGuid
-      tags:
-        - merchant
-      description: Each merchant created within the portal will require system credentials that APIs may use to authenticate on behalf of the merchant. The credentials are created in Fusion Auth with a preset creation definition.
+                      - posGuid
+      description: Register new card acceptor with POS provider when a new card acceptor is onboarded
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                mid:
-                  type: string
-                acquirer:
-                  type: string
-                tmsAccessToken:
-                  type: string
-              required:
-                - mid
-                - acquirer
-        description: MID for the merchant auth account being created
+              $ref: '#/components/schemas/posDetailsRequest'
+        description: ''
+      tags:
+        - pos
+    parameters: []
 components:
   schemas:
     ApiResponse:
@@ -61,14 +52,46 @@ components:
           type: number
         message:
           type: string
+    posDetailsRequest:
+      title: posDetailsRequest
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        companyWebsite:
+          type: string
+        supportEmail:
+          type: string
+        supportPhone:
+          type: string
+        webhookUrl:
+          type: string
+        webhookType:
+          type: string
+          enum:
+            - rest
+          description: type of callback system being supported
+      required:
+        - name
+        - description
+    cardAcceptorDetails:
+      title: cardAcceptorDetails
+      type: object
+      properties:
+        cardAcceptorGuid:
+          type: string
+        companyRegistrationNumber:
+          type: string
   securitySchemes:
     Authorization:
       type: http
       scheme: bearer
       description: ''
 tags:
-  - name: merchant
-    description: Administer the merchants managed by the service
+  - name: cardAcceptor
+    description: Administer the card acceptors managed by the service
     externalDocs:
       url: 'http://terminals.somewhere.com/admin.htm'
   - name: admin

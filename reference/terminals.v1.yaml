@@ -76,8 +76,8 @@ paths:
         - schema:
             type: string
           in: query
-          name: merchantGuid
-          description: Globally unique ID of the merchant as registered with the service. Required if the application is a pos.
+          name: cardAcceptorGuid
+          description: Globally unique ID of the card acceptor as registered with the service. Required if the application is a pos.
         - schema:
             type: string
           in: query
@@ -153,7 +153,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TransactionDetailsResponse'
         '404':
-          description: Terminal not found for the requesting merchant.
+          description: Terminal not found for the requesting card acceptor.
           content:
             application/json:
               schema:
@@ -175,7 +175,7 @@ paths:
                   value:
                     responseCode: -100
                     responseMsg: Connection timeout while calling Firebase
-      description: 'Intiate a request to a terminal to perform a transaction. If the terminal exists and is linked to the merchant making the request, on object containing only the Transaction ID will be pushed to the terminal and a TransactionDetails response will be returned. The terminal will then call getTransaction to fetch the transaction details.'
+      description: 'Intiate a request to a terminal to perform a transaction. If the terminal exists and is linked to the card acceptor making the request, on object containing only the Transaction ID will be pushed to the terminal and a TransactionDetails response will be returned. The terminal will then call getTransaction to fetch the transaction details.'
       tags:
         - pos
       requestBody:
@@ -215,7 +215,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TransactionDetailsResponse'
         '404':
-          description: Terminal or transaction not found for the requesting merchant
+          description: Terminal or transaction not found for the requesting card acceptor
           content:
             application/json:
               schema:
@@ -317,7 +317,7 @@ paths:
                   state:
                     type: string
         '404':
-          description: Terminal or transaction not found for the requesting merchant
+          description: Terminal or transaction not found for the requesting card acceptor
           content:
             application/json:
               schema:
@@ -368,7 +368,7 @@ paths:
                     type: string
               examples: {}
         '404':
-          description: Terminal or transaction not found for the requesting merchant
+          description: Terminal or transaction not found for the requesting card acceptor
           content:
             application/json:
               schema:
@@ -424,7 +424,7 @@ paths:
                     type: string
                   error_reason:
                     type: string
-      description: 'Request credentials for device authentication. Once a user code for device linking is provided the terminal will begin to poll this endpoint, in the mean time the user will authorise the user code in the merchant portal and on the success of this, the endpoint will supply authorisation details.'
+      description: 'Request credentials for device authentication. Once a user code for device linking is provided the terminal will begin to poll this endpoint, in the mean time the user will authorise the user code in the card acceptor portal and on the success of this, the endpoint will supply authorisation details.'
       requestBody:
         content:
           application/json:
@@ -476,7 +476,7 @@ paths:
                     type: string
                   error_reason:
                     type: string
-      description: 'Request credentials for device authentication. Once a user code for device linking is provided the terminal will begin to poll this endpoint, in the mean time the user will authorise the user code in the merchant portal and on the success of this, the endpoint will supply authorisation details.'
+      description: 'Request credentials for device authentication. Once a user code for device linking is provided the terminal will begin to poll this endpoint, in the mean time the user will authorise the user code in the card acceptor portal and on the success of this, the endpoint will supply authorisation details.'
       requestBody:
         content:
           application/json:
@@ -510,7 +510,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthDeviceResponse'
-      description: Request code for authorising device on merchant profile
+      description: Request code for authorising device on card acceptor profile
       requestBody:
         content:
           application/json:
@@ -532,7 +532,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthDeviceResponse'
-      description: Request code for authorising device on merchant profile
+      description: Request code for authorising device on card acceptor profile
       requestBody:
         content:
           application/json:
@@ -646,21 +646,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TerminalDetailsResponse'
-      description: Link terminal to merchantGuid and authorise access for the device.
+      description: Link terminal to cardAcceptorGuid and authorise access for the device.
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                merchantGuid:
+                cardAcceptorGuid:
                   type: string
                 userCode:
                   type: string
                 clientId:
                   type: string
               required:
-                - merchantGuid
+                - cardAcceptorGuid
                 - userCode
                 - clientId
       tags:
@@ -900,7 +900,7 @@ components:
           type: string
         serialNumber:
           type: string
-        merchantGuid:
+        cardAcceptorGuid:
           type: string
         state:
           type: string
