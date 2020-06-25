@@ -8,7 +8,7 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /card_acceptors:
+  /cardAcceptors:
     post:
       summary: Register card acceptor
       operationId: createCardAcceptor
@@ -21,26 +21,84 @@ paths:
                 type: object
                 properties:
                   code:
-                    type: number
+                    type: integer
                   message:
                     type: string
-                  posDetails:
-                    type: object
-                    properties:
-                      posGuid:
-                        type: string
-                    required:
-                      - posGuid
+                  listOfLocations:
+                    type: array
+                    items:
+                      $ref: './pos.v1.yaml#/components/schemas/posLocations'
+                required:
+                  - code
+                  - message
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
       description: Register new card acceptor with POS provider when a new card acceptor is onboarded
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/posDetailsRequest'
+              type: object
+              properties:
+                companyRegistrationNumber:
+                  type: string
+                posLocationId:
+                  type: string
+                cardAcceptorGuid:
+                  type: string
+              required:
+                - companyRegistrationNumber
+                - cardAcceptorGuid
         description: ''
       tags:
         - pos
     parameters: []
+  /terminals:
+    post:
+      summary: Terminal Link Notification
+      operationId: terminalsNotification
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: -1
+                    description: '-1 for success'
+                  message:
+                    type: string
+      description: A post to notify POS provider that a terminal has been linked to a cardAcceptor. The link could be for a new temrinal at the cardAcceptor or a re-link of a terminal.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                terminalGuid:
+                  type: string
+                description:
+                  type: string
+                brand:
+                  type: string
+                model:
+                  type: string
+                serialNumber:
+                  type: string
+      tags:
+        - webhooks
 components:
   schemas:
     ApiResponse:
@@ -110,3 +168,7 @@ tags:
     description: Data models used by the API
     externalDocs:
       url: 'http://terminals.somewhere.com/models.htm'
+  - name: webhooks
+    description: Webhooks to be supply by third party consumers
+    externalDocs:
+      url: 'http://terminals.somewhere.com/webhooks.htm'

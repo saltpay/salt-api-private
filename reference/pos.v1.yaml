@@ -1,0 +1,222 @@
+openapi: 3.0.0
+info:
+  title: pos
+  version: '1.0'
+  description: A backend service to enable managment of point of sale providers
+  contact:
+    name: Salt Group
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /pos:
+    post:
+      summary: Create  a pos provider
+      operationId: createpos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  message:
+                    type: string
+                  posDetails:
+                    type: object
+                    properties:
+                      posGuid:
+                        type: string
+                    required:
+                      - posGuid
+      description: Create new pos provider that has been allowed to integrate with Salt API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/posDetailsRequest'
+        description: ''
+      tags:
+        - pos
+    parameters: []
+    get:
+      summary: Retrieve POS provider details
+      operationId: getpos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  posDetailsList:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/posDetails'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+      description: Retrieve pos provider details
+      security:
+        - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: posGuid
+          description: 'Globally unique ID of the pos as registered with the service. '
+      tags:
+        - pos
+  /pos/cardAcceptors:
+    post:
+      summary: Advise of new card acceptors
+      operationId: postCardAcceptors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  listOfLocations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/posLocations'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+      description: Inform POS provider of the onboarding of a new card acceptor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                posGuid:
+                  type: string
+                cardAcceptorGuid:
+                  type: string
+                companyRegistrationNumber:
+                  type: string
+                posLocationId:
+                  type: string
+components:
+  schemas:
+    ApiResponse:
+      title: ApiResponse
+      type: object
+      description: 'Base API response object used for all API responses. This can include cases when there are server errors, as the responseCode allows for finer grained error reporting than the HTTP status alone.'
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+    posDetailsRequest:
+      title: posDetailsRequest
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        companyWebsite:
+          type: string
+        supportEmail:
+          type: string
+        supportPhone:
+          type: string
+        webhookUrl:
+          type: string
+        webhookType:
+          type: string
+          enum:
+            - rest
+          description: type of callback system being supported
+      required:
+        - name
+        - description
+    posDetails:
+      title: posDetails
+      type: object
+      properties:
+        posGuid:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        companyWebsite:
+          type: string
+        supportEmail:
+          type: string
+        supportPhone:
+          type: string
+        webhookUrl:
+          type: string
+        webhookType:
+          type: string
+    posLocations:
+      title: posLocations
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        posLocationId:
+          type: string
+      required:
+        - name
+        - posLocationId
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      description: ''
+tags:
+  - name: cardAcceptor
+    description: Administer the card acceptors managed by the service
+    externalDocs:
+      url: 'http://terminals.somewhere.com/admin.htm'
+  - name: admin
+    description: Administer the terminals managed by the service
+    externalDocs:
+      url: 'http://terminals.somewhere.com/admin.htm'
+  - name: pos
+    description: Methods available to POS systems
+    externalDocs:
+      url: 'http://terminals.somewhere.com/pos.htm'
+  - name: terminal
+    description: Methods available to terminals
+    externalDocs:
+      url: 'http://terminals.somewhere.com/terminals.htm'
+  - name: model
+    description: Data models used by the API
+    externalDocs:
+      url: 'http://terminals.somewhere.com/models.htm'
