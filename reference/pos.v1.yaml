@@ -126,17 +126,10 @@ paths:
                   type: string
                 posLocationId:
                   type: string
+      tags:
+        - pos
 components:
   schemas:
-    ApiResponse:
-      title: ApiResponse
-      type: object
-      description: 'Base API response object used for all API responses. This can include cases when there are server errors, as the responseCode allows for finer grained error reporting than the HTTP status alone.'
-      properties:
-        code:
-          type: number
-        message:
-          type: string
     posDetailsRequest:
       title: posDetailsRequest
       type: object

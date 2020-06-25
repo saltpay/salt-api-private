@@ -100,48 +100,7 @@ paths:
       tags:
         - webhooks
 components:
-  schemas:
-    ApiResponse:
-      title: ApiResponse
-      type: object
-      description: 'Base API response object used for all API responses. This can include cases when there are server errors, as the responseCode allows for finer grained error reporting than the HTTP status alone.'
-      properties:
-        code:
-          type: number
-        message:
-          type: string
-    posDetailsRequest:
-      title: posDetailsRequest
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        companyWebsite:
-          type: string
-        supportEmail:
-          type: string
-        supportPhone:
-          type: string
-        webhookUrl:
-          type: string
-        webhookType:
-          type: string
-          enum:
-            - rest
-          description: type of callback system being supported
-      required:
-        - name
-        - description
-    cardAcceptorDetails:
-      title: cardAcceptorDetails
-      type: object
-      properties:
-        cardAcceptorGuid:
-          type: string
-        companyRegistrationNumber:
-          type: string
+  schemas: {}
   securitySchemes:
     Authorization:
       type: http

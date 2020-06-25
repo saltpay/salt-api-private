@@ -51,16 +51,7 @@ paths:
                 - acquirer
         description: MID for the card acceptor auth account being created
 components:
-  schemas:
-    ApiResponse:
-      title: ApiResponse
-      type: object
-      description: 'Base API response object used for all API responses. This can include cases when there are server errors, as the responseCode allows for finer grained error reporting than the HTTP status alone.'
-      properties:
-        code:
-          type: number
-        message:
-          type: string
+  schemas: {}
   securitySchemes:
     Authorization:
       type: http
