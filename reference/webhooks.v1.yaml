@@ -24,13 +24,32 @@ paths:
                     type: integer
                   message:
                     type: string
-                  posLocationsList:
+                  posLocationList:
                     type: array
                     items:
                       $ref: './pos.v1.yaml#/components/schemas/posLocations'
-                required:
-                  - code
-                  - message
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+        '404':
+          description: When company registration number not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
       description: Register new card acceptor with POS provider when a new card acceptor is onboarded
       requestBody:
         content:
@@ -38,8 +57,16 @@ paths:
             schema:
               type: object
               properties:
+                cardAcceptorGuid:
+                  type: string
                 companyRegistrationNumber:
                   type: string
+                posLocationId:
+                  type: string
+                  description: ''
+              required:
+                - cardAcceptorGuid
+                - companyRegistrationNumber
         description: ''
       tags:
         - pos
