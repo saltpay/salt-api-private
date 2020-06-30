@@ -8,7 +8,7 @@ info:
 servers:
   - url: 'http://localhost:3100'
 paths:
-  /cardAcceptors:
+  /card_acceptors:
     post:
       summary: Create  card acceptor auth account
       operationId: createCardAcceptorAuthAccount
@@ -50,6 +50,7 @@ paths:
                 - mid
                 - acquirer
         description: MID for the card acceptor auth account being created
+    parameters: []
 components:
   schemas: {}
   securitySchemes:

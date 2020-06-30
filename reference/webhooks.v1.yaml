@@ -8,7 +8,7 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /cardAcceptors:
+  /card_acceptors:
     post:
       summary: Register card acceptor
       operationId: createCardAcceptor
@@ -24,24 +24,13 @@ paths:
                     type: integer
                   message:
                     type: string
-                  listOfLocations:
+                  posLocationsList:
                     type: array
                     items:
                       $ref: './pos.v1.yaml#/components/schemas/posLocations'
                 required:
                   - code
                   - message
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                  message:
-                    type: string
       description: Register new card acceptor with POS provider when a new card acceptor is onboarded
       requestBody:
         content:
@@ -51,13 +40,6 @@ paths:
               properties:
                 companyRegistrationNumber:
                   type: string
-                posLocationId:
-                  type: string
-                cardAcceptorGuid:
-                  type: string
-              required:
-                - companyRegistrationNumber
-                - cardAcceptorGuid
         description: ''
       tags:
         - pos
@@ -97,10 +79,54 @@ paths:
                   type: string
                 serialNumber:
                   type: string
+                cardAcceptorGuid:
+                  type: string
+        description: ''
       tags:
         - webhooks
 components:
-  schemas: {}
+  schemas:
+    ApiResponse:
+      title: ApiResponse
+      type: object
+      description: 'Base API response object used for all API responses. This can include cases when there are server errors, as the responseCode allows for finer grained error reporting than the HTTP status alone.'
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+    posDetailsRequest:
+      title: posDetailsRequest
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        companyWebsite:
+          type: string
+        supportEmail:
+          type: string
+        supportPhone:
+          type: string
+        webhookUrl:
+          type: string
+        webhookType:
+          type: string
+          enum:
+            - rest
+          description: type of callback system being supported
+      required:
+        - name
+        - description
+    cardAcceptorDetails:
+      title: cardAcceptorDetails
+      type: object
+      properties:
+        cardAcceptorGuid:
+          type: string
+        companyRegistrationNumber:
+          type: string
   securitySchemes:
     Authorization:
       type: http

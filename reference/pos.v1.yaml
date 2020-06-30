@@ -60,27 +60,13 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/posDetails'
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
       description: Retrieve pos provider details
       security:
         - Authorization: []
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: posGuid
-          description: 'Globally unique ID of the pos as registered with the service. '
+      parameters: []
       tags:
         - pos
-  /pos/cardAcceptors:
+  '/pos/{posGuid}/card_acceptors':
     post:
       summary: Advise of new card acceptors
       operationId: postCardAcceptors
@@ -96,12 +82,23 @@ paths:
                     type: integer
                   message:
                     type: string
-                  listOfLocations:
+                  posLocationList:
                     type: array
                     items:
                       $ref: '#/components/schemas/posLocations'
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+        '404':
+          description: When company registration number not found
           content:
             application/json:
               schema:
@@ -118,16 +115,25 @@ paths:
             schema:
               type: object
               properties:
-                posGuid:
-                  type: string
                 cardAcceptorGuid:
                   type: string
                 companyRegistrationNumber:
                   type: string
                 posLocationId:
                   type: string
+                  description: ''
+              required:
+                - cardAcceptorGuid
+                - companyRegistrationNumber
+        description: ''
       tags:
         - pos
+    parameters:
+      - schema:
+          type: string
+        name: posGuid
+        in: path
+        required: true
 components:
   schemas:
     posDetailsRequest:
@@ -169,10 +175,6 @@ components:
         supportEmail:
           type: string
         supportPhone:
-          type: string
-        webhookUrl:
-          type: string
-        webhookType:
           type: string
     posLocations:
       title: posLocations
