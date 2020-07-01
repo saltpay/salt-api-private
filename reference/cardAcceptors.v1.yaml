@@ -46,6 +46,8 @@ paths:
                   type: string
                 tmsAccessToken:
                   type: string
+                posGuid:
+                  type: string
               required:
                 - mid
                 - acquirer
