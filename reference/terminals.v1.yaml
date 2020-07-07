@@ -186,6 +186,39 @@ paths:
             examples: {}
       security:
         - Authorization: []
+    get:
+      summary: ''
+      operationId: getCardAcceptorTransactions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  transactionDetailsList:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TransactionDetails'
+      tags:
+        - terminal
+      description: Retrieve transactions currently linked to the terminals current cardAcceptor
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: pageOffset
+          description: 'If pageSize is specified, this is the page offset.'
+        - schema:
+            type: integer
+          in: query
+          name: pageSize
+          description: Specify in order to retrieve a paged response
   '/terminals/{terminalGuid}/transactions/{transactionId}':
     parameters:
       - schema:
@@ -866,6 +899,8 @@ components:
             terminalGuid:
               type: string
             tmsAccessToken:
+              type: string
+            cardAcceptorGuid:
               type: string
     AuthDeviceResponse:
       title: AuthDeviceResponse
