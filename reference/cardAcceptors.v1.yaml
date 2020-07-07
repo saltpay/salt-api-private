@@ -48,6 +48,9 @@ paths:
                   type: string
                 posGuid:
                   type: string
+                tradingName:
+                  type: string
+                  description: Trading name for MID
               required:
                 - mid
                 - acquirer
