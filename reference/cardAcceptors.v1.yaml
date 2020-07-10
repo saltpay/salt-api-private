@@ -44,7 +44,7 @@ paths:
                   type: string
                 acquirer:
                   type: string
-                tmsAccessToken:
+                switchAccessToken:
                   type: string
                 posGuid:
                   type: string

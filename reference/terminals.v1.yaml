@@ -312,7 +312,7 @@ paths:
                   type: integer
                 cardVerificationType:
                   type: string
-                terminalTransactionId:
+                switchTransactionId:
                   type: string
               required:
                 - state
@@ -803,7 +803,7 @@ components:
             - failed
             - not_required
             - other
-        terminalTransactionId:
+        switchTransactionId:
           type: string
         cashierId:
           type: string
@@ -898,7 +898,7 @@ components:
               type: string
             terminalGuid:
               type: string
-            tmsAccessToken:
+            switchAccessToken:
               type: string
             cardAcceptorGuid:
               type: string
