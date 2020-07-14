@@ -783,6 +783,10 @@ components:
           description: Tip Amount.
         state:
           type: string
+          enum:
+            - APPROVED
+            - DECLINED
+            - CANCELLED
         cardEntryMode:
           type: string
           enum:
