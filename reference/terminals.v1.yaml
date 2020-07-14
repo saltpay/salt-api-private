@@ -330,6 +330,10 @@ paths:
                   type: string
                 switchTransactionId:
                   type: string
+                cardAcceptorReceipt:
+                  type: string
+                cardholderReceipt:
+                  type: string
               required:
                 - state
         description: The state must be provided in all update calls. The card fields are required when the state is DECLINED or APPROVED or CANCELLED. The authCode field is required when the state is APPROVED.
@@ -833,6 +837,14 @@ components:
           enum:
             - payment
             - refund
+        createDate:
+          type: string
+          description: createDate UTC timezone
+          example: 'yyyy-MM-dd HH:mm:ss'
+        cardAcceptorReceipt:
+          type: string
+        cardholderReceipt:
+          type: string
       required:
         - state
         - posTransactionId
