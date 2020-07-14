@@ -230,7 +230,11 @@ paths:
         - schema:
             type: string
           in: query
-          name: createDate
+          name: minDate
+        - schema:
+            type: string
+          in: query
+          name: maxDate
   '/terminals/{terminalGuid}/transactions/{transactionId}':
     parameters:
       - schema:
