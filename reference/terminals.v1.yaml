@@ -204,7 +204,7 @@ paths:
                   transactionDetailsList:
                     type: array
                     items:
-                      $ref: '#/components/schemas/TransactionDetails'
+                      $ref: '#/components/schemas/TransactionDetailsSummary'
       tags:
         - terminal
       description: Retrieve transactions currently linked to the terminals current cardAcceptor
@@ -772,8 +772,82 @@ paths:
         - Authorization: []
 components:
   schemas:
+    TransactionDetailsSummary:
+      title: TransactionDetailsSummary
+      type: object
+      description: This object describes the general list of fields relevant when retrieving a transaction.
+      properties:
+        transactionId:
+          type: integer
+        totalAmount:
+          type: integer
+          description: 'Total Transaction Amount, including tip.'
+        tipAmount:
+          type: integer
+          description: Tip Amount.
+        state:
+          type: string
+          enum:
+            - APPROVED
+            - DECLINED
+            - CANCELLED
+        cardEntryMode:
+          type: string
+          enum:
+            - manual
+            - magstripe
+            - chip
+            - contactless_magstripe
+            - contactless_chip
+            - other
+        cardMaskedNumber:
+          type: string
+          minLength: 8
+          maxLength: 19
+        cardSchemeName:
+          type: string
+        authCode:
+          type: string
+        posTransactionId:
+          type: string
+          description: Transaction ID as provided by the POS for support purposes.
+        currency:
+          type: string
+          description: ISO 4217 Alpha-3 currency code
+        requestAmount:
+          type: integer
+          description: 'Requested Transaction Amount, excluding tip.'
+        cardVerificationType:
+          type: string
+          enum:
+            - undefined
+            - signature
+            - pin
+            - pin_signature
+            - failed
+            - not_required
+            - other
+        switchTransactionId:
+          type: string
+        cashierId:
+          type: string
+          description: ''
+        transactionType:
+          type: string
+          enum:
+            - payment
+            - refund
+        createDate:
+          type: string
+          description: createDate UTC timezone
+          example: 'yyyy-MM-dd HH:mm:ss'
+      required:
+        - state
+        - posTransactionId
+        - currency
+        - requestAmount
     TransactionDetails:
-      title: TransactionDetails
+      title: TransactionDetailsSummary
       type: object
       description: This object describes the general list of fields relevant when retrieving a transaction.
       properties:
@@ -843,7 +917,7 @@ components:
           example: 'yyyy-MM-dd HH:mm:ss'
         cardAcceptorReceipt:
           type: string
-        cardholderReceipt:
+        cardHolderReceipt:
           type: string
       required:
         - state
