@@ -322,6 +322,7 @@ paths:
                     - APPROVED
                     - DECLINED
                     - CANCELLED
+                    - CANCELLING
                 tipAmount:
                   type: integer
                 totalAmount:
@@ -791,6 +792,7 @@ components:
             - APPROVED
             - DECLINED
             - CANCELLED
+            - CANCELLING
         cardEntryMode:
           type: string
           enum:
@@ -847,7 +849,7 @@ components:
         - currency
         - requestAmount
     TransactionDetails:
-      title: TransactionDetailsSummary
+      title: TransactionDetails
       type: object
       description: This object describes the general list of fields relevant when retrieving a transaction.
       properties:
@@ -865,6 +867,7 @@ components:
             - APPROVED
             - DECLINED
             - CANCELLED
+            - CANCELLING
         cardEntryMode:
           type: string
           enum:
