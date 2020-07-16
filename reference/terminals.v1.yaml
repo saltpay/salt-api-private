@@ -186,6 +186,12 @@ paths:
             examples: {}
       security:
         - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: x-managerPinData
+          description: Needs to be validated only if request originates from Terminal and transactionType is Refund
     get:
       summary: Retrieve transaction for the terminals card acceptor
       operationId: getCardAcceptorTransactions
@@ -340,6 +346,12 @@ paths:
         description: The state must be provided in all update calls. The card fields are required when the state is DECLINED or APPROVED or CANCELLED. The authCode field is required when the state is APPROVED.
       security:
         - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: x-managerPinData
+          description: Needs to be validated only if request originates from Terminal and patch is for state Cancelling
   '/terminals/{terminalGuid}/transactions/{transactionId}/state':
     parameters:
       - schema:
@@ -729,7 +741,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Get temrinal details
+      summary: Get terminal details
       responses:
         '200':
           description: OK
@@ -1014,6 +1026,8 @@ components:
               type: string
             cardAcceptorGuid:
               type: string
+            managerPinSet:
+              type: boolean
     AuthDeviceResponse:
       title: AuthDeviceResponse
       type: object
