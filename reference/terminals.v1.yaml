@@ -328,7 +328,8 @@ paths:
                     - APPROVED
                     - DECLINED
                     - CANCELLED
-                    - CANCELLING
+                    - REVERSING
+                    - REVERSED
                 tipAmount:
                   type: integer
                 totalAmount:
@@ -351,7 +352,7 @@ paths:
             type: string
           in: header
           name: x-managerPinData
-          description: Needs to be validated only if request originates from Terminal and patch is for state Cancelling
+          description: Needs to be validated only if request originates from Terminal and patch is for state reversing
   '/terminals/{terminalGuid}/transactions/{transactionId}/state':
     parameters:
       - schema:
@@ -804,7 +805,8 @@ components:
             - APPROVED
             - DECLINED
             - CANCELLED
-            - CANCELLING
+            - REVERSING
+            - REVERSED
         cardEntryMode:
           type: string
           enum:
@@ -879,7 +881,8 @@ components:
             - APPROVED
             - DECLINED
             - CANCELLED
-            - CANCELLING
+            - REVERSING
+            - REVERSED
         cardEntryMode:
           type: string
           enum:
