@@ -330,6 +330,7 @@ paths:
                     - CANCELLED
                     - REVERSING
                     - REVERSED
+                    - FAILED
                 tipAmount:
                   type: integer
                 totalAmount:
@@ -344,7 +345,7 @@ paths:
                   type: string
               required:
                 - state
-        description: The state must be provided in all update calls. The card fields are required when the state is DECLINED or APPROVED or CANCELLED. The authCode field is required when the state is APPROVED.
+        description: The state must be provided in all update calls. The card fields are required when the state is DECLINED or APPROVED or REVERSED. The authCode field is required when the state is APPROVED.
       security:
         - Authorization: []
       parameters:
@@ -807,6 +808,7 @@ components:
             - CANCELLED
             - REVERSING
             - REVERSED
+            - FAILED
         cardEntryMode:
           type: string
           enum:
@@ -883,6 +885,7 @@ components:
             - CANCELLED
             - REVERSING
             - REVERSED
+            - FAILED
         cardEntryMode:
           type: string
           enum:
