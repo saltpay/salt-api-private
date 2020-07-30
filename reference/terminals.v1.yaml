@@ -722,7 +722,6 @@ paths:
                   type: boolean
               required:
                 - refreshToken
-                - requireConfig
       tags:
         - terminal
   /terminals/link:
