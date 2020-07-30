@@ -111,6 +111,17 @@ paths:
         description: ''
       tags:
         - webhooks
+    delete:
+      summary: Remove terminal from card acceptor
+      operationId: delete-terminals
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+      tags:
+        - webhooks
+      description: Remove terminal from associated cardAcceptor
 components:
   schemas: {}
   securitySchemes:

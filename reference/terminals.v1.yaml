@@ -652,6 +652,15 @@ paths:
                         type: string
                       refreshToken:
                         type: string
+                      requireConfig:
+                        type: boolean
+                      configList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            cardAcceptorGuid:
+                              type: string
                     required:
                       - token
                       - refreshToken
@@ -685,10 +694,18 @@ paths:
                   refreshTokenDetails:
                     type: object
                     properties:
+                      accessToken:
+                        type: string
                       token:
                         type: string
                       refreshToken:
                         type: string
+                      cardAcceptorGuid:
+                        type: string
+                      switchAccessToken:
+                        type: string
+                      managerPinSet:
+                        type: boolean
                     required:
                       - token
                       - refreshToken
@@ -701,6 +718,11 @@ paths:
               properties:
                 refreshToken:
                   type: string
+                requireConfig:
+                  type: boolean
+              required:
+                - refreshToken
+                - requireConfig
       tags:
         - terminal
   /terminals/link:
@@ -1018,13 +1040,7 @@ components:
           properties:
             accessToken:
               type: string
-            expiresIn:
-              type: integer
             refreshToken:
-              type: string
-            tokenType:
-              type: string
-            userId:
               type: string
             terminalGuid:
               type: string

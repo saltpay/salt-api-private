@@ -33,4 +33,4 @@ When processing a transaction in a store, there are 4 main players involved.
 4. The terminal, which facilitates the transaction against the consumers card 
 
 The flow for the interaction during a sale is outlined below:
-![Basic In-store Flow](http://rad2.wigroup.co/wigroup/wiplatform/uploads/basic-instore-flow.png "Basic In-store Flow")
+![Basic In-store Flow](https://s3-eu-west-1.amazonaws.com/images.docs.saltpay.co/basic-instore-flow.png "Basic In-store Flow")
