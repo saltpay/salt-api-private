@@ -724,6 +724,12 @@ paths:
                 - refreshToken
       tags:
         - terminal
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: terminalGuid
+          description: param only set when requireConfig is true
   /terminals/link:
     post:
       summary: Link Terminal
