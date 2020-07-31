@@ -803,6 +803,31 @@ paths:
         - admin
       security:
         - Authorization: []
+  '/terminals/{terminalGuid}/card_acceptor':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+    delete:
+      summary: Unlink terminal from card acceptor
+      operationId: unlinkCardAcceptorTerminal
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  message:
+                    type: string
+      tags:
+        - terminal
+      description: Unlink a terminal from a specific card acceptor
 components:
   schemas:
     TransactionDetailsSummary:
