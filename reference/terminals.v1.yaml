@@ -861,6 +861,8 @@ paths:
                   type: string
         description: JSON sent by SNS for a notification
       description: Endpoint that is triggered by SNS when a file is dropped in S3 for batch of new terminals that need to be imported into the system
+      tags:
+        - terminal
 components:
   schemas:
     TransactionDetailsSummary:
