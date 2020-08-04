@@ -828,6 +828,39 @@ paths:
       tags:
         - terminal
       description: Unlink a terminal from a specific card acceptor
+  /terminals/stock/batches/sns:
+    post:
+      summary: Terminal Stock File Import
+      operationId: postTerminalStockFileImport
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Message:
+                  type: string
+                MessageId:
+                  type: string
+                Signature:
+                  type: string
+                SignatureVersion:
+                  type: string
+                SigningCertURL:
+                  type: string
+                Timestamp:
+                  type: string
+                TopicArn:
+                  type: string
+                Type:
+                  type: string
+                UnsubscribeURL:
+                  type: string
+        description: JSON sent by SNS for a notification
+      description: Endpoint that is triggered by SNS when a file is dropped in S3 for batch of new terminals that need to be imported into the system
 components:
   schemas:
     TransactionDetailsSummary:
