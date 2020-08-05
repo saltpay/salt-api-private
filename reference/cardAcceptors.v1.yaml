@@ -46,8 +46,6 @@ paths:
                   type: string
                 switchAccessToken:
                   type: string
-                posGuid:
-                  type: string
               required:
                 - mid
                 - acquirer
