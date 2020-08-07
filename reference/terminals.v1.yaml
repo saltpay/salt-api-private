@@ -334,6 +334,7 @@ paths:
                     - REVERSING
                     - REVERSED
                     - FAILED
+                    - PENDING
                 tipAmount:
                   type: integer
                 totalAmount:
@@ -890,6 +891,7 @@ components:
             - REVERSING
             - REVERSED
             - FAILED
+            - PENDING
         cardEntryMode:
           type: string
           enum:
@@ -967,6 +969,7 @@ components:
             - REVERSING
             - REVERSED
             - FAILED
+            - PENDING
         cardEntryMode:
           type: string
           enum:
