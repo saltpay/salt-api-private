@@ -8,7 +8,7 @@ info:
 servers:
   - url: 'http://localhost:3100'
 paths:
-  '/card_acceptors/{cardAcceptorGuid}':
+  /card_acceptors:
     post:
       summary: Create card acceptor auth account
       operationId: createCardAcceptorAuthAccount
@@ -53,39 +53,7 @@ paths:
                 - acquirer
                 - name
         description: MID for the card acceptor auth account being created
-    parameters:
-      - schema:
-          type: string
-        name: cardAcceptorGuid
-        in: path
-        required: true
-    patch:
-      summary: ''
-      operationId: updateCardAcceptor
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
-        '404':
-          description: Card Acceptor Not Found
-          content:
-            application/json:
-              schema:
-                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
-      description: Update the card acceptor record with latest details needed by the terminal.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                switchAccessToken:
-                  type: string
-                name:
-                  type: string
+    parameters: []
   '/card_acceptors/{cardAcceptorGuid}/manager_pin':
     parameters:
       - schema:
@@ -173,6 +141,40 @@ paths:
       description: Update the pin for a specific card acceptor
       tags:
         - admin
+  '/card_acceptors/{cardAcceptorGuid}':
+    parameters:
+      - schema:
+          type: string
+        name: cardAcceptorGuid
+        in: path
+        required: true
+    patch:
+      summary: Update Card Acceptor
+      operationId: updateCardAcceptor
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
+        '404':
+          description: Card Acceptor Not Found
+          content:
+            application/json:
+              schema:
+                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
+      description: Update the card acceptor record with latest details needed by the terminal.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                switchAccessToken:
+                  type: string
+                name:
+                  type: string
 components:
   schemas: {}
   securitySchemes:
