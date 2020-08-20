@@ -452,64 +452,6 @@ paths:
       description: '(Proposal) Get an event stream of Server Sent Events (SSEs) for updates on the transaction processing. Currently only an event of type "state_update" is available. For this event, the data will be the state, e.g. "PROCESSING", "APPROVED", "DECLINED". '
       security:
         - Authorization: []
-  '/terminals/{terminalGuid}/auth/token':
-    parameters:
-      - schema:
-          type: string
-        name: terminalGuid
-        in: path
-        required: true
-    post:
-      summary: DEPRECATED Retrieve Auth Details
-      operationId: retrieveAuthCredentialsWithTerminalGuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthTokenResponse'
-              examples:
-                Positive Response:
-                  value:
-                    code: -1
-                    message: Success
-                    AuthDetails:
-                      accessToken: eyJhbGciOiJI3zI1NiIsInR5cCI6Ikp333IsImtpZCI6IjQxMjY4OTQ4NDcifQ.eyJhdWQiOiJmZTAyMWMzYi1lMGM2LTRlZWQtOThjOS0xYjhlNmRkMDM1YmMiLCJleHAiOjE1OTA1MDI0MDksImlhdCI6MTU5MDQ5ODgwOSwia3NzIjoiYWNtZS5jb20iLCJzdWIiOiJjYTUxNGRkYi1hZDQ4LTQ2MDktYTM4Yy03ODdjM2VjZTRmMjciLCJ3333oZW50aWNhdGlvblR5cGUiOiJQQVNTV09SRCIsImVtYWl3IjoibWVnZXNoZ0B3aWdyb3VwLmNvLnphIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInB3ZWZlcnJlZF91c2VybmFtZSI6Im1lZ2VzaGciLCJhcHBsaWNhdGl3bklkIjoiZmUwMjFjM2ItZTBjNi30ZWVkLTk4YzktMWI4ZTZkZDAzNWJjIiwicm9sZXMiOltdfQ.z635ACvC33xZuwe5YFn3mtPDSKQSuXHZUJdsAq94iTU
-                      expiresIn: 3599
-                      refreshToken: PQpkHdIqtKdEHHZlMRVrtpwaOrbSTk5E9DRWjLyVBPjWHW1rzPm_0g
-                      tokenType: Bearer
-                      userId: c3514ddb-3d48-4309-a33c-387c333e4327
-        '400':
-          description: 'Bad Request, with error field in payload that defines why the auth has not been completed'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  error_description:
-                    type: string
-                  error_reason:
-                    type: string
-      description: 'Request credentials for device authentication. Once a user code for device linking is provided the terminal will begin to poll this endpoint, in the mean time the user will authorise the user code in the card acceptor portal and on the success of this, the endpoint will supply authorisation details.'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                deviceCode:
-                  type: string
-                clientId:
-                  type: string
-              required:
-                - deviceCode
-                - clientId
-        description: 'All fields are mandatory, deviceCode is retrieved on the /auth/device endpoint and the clientId is a config value that represents the application in Fusion Auth.'
-      tags:
-        - terminal
   /terminals/auth/token:
     post:
       summary: Retrieve Auth Details
@@ -562,34 +504,6 @@ paths:
         description: 'All fields are mandatory, deviceCode is retrieved on the /auth/device endpoint and the clientId is a config value that represents the application in Fusion Auth.'
       tags:
         - terminal
-  '/terminals/{terminalGuid}/auth/device':
-    parameters:
-      - schema:
-          type: string
-        name: terminalGuid
-        in: path
-        required: true
-    post:
-      summary: DEPRECATED Request Device Code
-      operationId: requestDeviceCodeWithTerminalGuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthDeviceResponse'
-      description: Request code for authorising device on card acceptor profile
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                clientId:
-                  type: string
-      tags:
-        - terminal
   /terminals/auth/device:
     post:
       summary: Request Device Code
@@ -624,49 +538,6 @@ paths:
         description: Device information for the current device requiring to be authenticated
       tags:
         - terminal
-  '/terminals/{terminalGuid}/auth/refresh':
-    parameters:
-      - schema:
-          type: string
-        name: terminalGuid
-        in: path
-        required: true
-    post:
-      summary: DEPRECATED Request new JWT based on valid Refresh Token
-      operationId: refreshJWTWithTerminal
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                  message:
-                    type: string
-                  refreshTokenDetails:
-                    type: object
-                    properties:
-                      token:
-                        type: string
-                      refreshToken:
-                        type: string
-                    required:
-                      - token
-                      - refreshToken
-      description: Retrieve a new valid JWT using a valid Refresh Token retrieved previously
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                refreshToken:
-                  type: string
-      tags:
-        - terminal
   /terminals/auth/refresh:
     post:
       summary: Request new JWT based on valid Refresh Token
@@ -698,7 +569,14 @@ paths:
                         type: string
                       managerPinSet:
                         type: boolean
+                      cardAcceptorName:
+                        type: string
+                      mid:
+                        type: string
+                      terminalGuid:
+                        type: string
                     required:
+                      - accessToken
                       - token
                       - refreshToken
       description: Retrieve a new valid JWT using a valid Refresh Token retrieved previously
@@ -1109,6 +987,10 @@ components:
               type: string
             managerPinSet:
               type: boolean
+            cardAcceptorName:
+              type: string
+            mid:
+              type: string
     AuthDeviceResponse:
       title: AuthDeviceResponse
       type: object
