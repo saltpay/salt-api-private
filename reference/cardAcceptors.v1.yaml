@@ -31,8 +31,6 @@ paths:
                         type: string
                     required:
                       - cardAcceptorGuid
-      tags:
-        - cardAcceptor
       description: Each card acceptor created within the portal will require system credentials that APIs may use to authenticate on behalf of the card acceptor. The credentials are created in Fusion Auth with a preset creation definition.
       requestBody:
         content:
@@ -53,6 +51,8 @@ paths:
                 - acquirer
                 - name
         description: MID for the card acceptor auth account being created
+      tags:
+        - admin
     parameters: []
   '/card_acceptors/{cardAcceptorGuid}/manager_pin':
     parameters:
@@ -175,6 +175,8 @@ paths:
                   type: string
                 name:
                   type: string
+      tags:
+        - admin
 components:
   schemas: {}
   securitySchemes:
