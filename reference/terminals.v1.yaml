@@ -37,14 +37,11 @@ paths:
                   enum:
                     - active
                     - inactive
-                description:
-                  type: string
               required:
                 - brand
                 - model
                 - serialNumber
                 - state
-                - description
       tags:
         - admin
       parameters: []

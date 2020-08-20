@@ -8,9 +8,9 @@ info:
 servers:
   - url: 'http://localhost:3100'
 paths:
-  /card_acceptors:
+  '/card_acceptors/{cardAcceptorGuid}':
     post:
-      summary: Create  card acceptor auth account
+      summary: Create card acceptor auth account
       operationId: createCardAcceptorAuthAccount
       responses:
         '200':
@@ -46,11 +46,46 @@ paths:
                   type: string
                 switchAccessToken:
                   type: string
+                name:
+                  type: string
               required:
                 - mid
                 - acquirer
+                - name
         description: MID for the card acceptor auth account being created
-    parameters: []
+    parameters:
+      - schema:
+          type: string
+        name: cardAcceptorGuid
+        in: path
+        required: true
+    patch:
+      summary: ''
+      operationId: updateCardAcceptor
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
+        '404':
+          description: Card Acceptor Not Found
+          content:
+            application/json:
+              schema:
+                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
+      description: Update the card acceptor record with latest details needed by the terminal.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                switchAccessToken:
+                  type: string
+                name:
+                  type: string
   '/card_acceptors/{cardAcceptorGuid}/manager_pin':
     parameters:
       - schema:
@@ -93,6 +128,8 @@ paths:
                   type: string
               required:
                 - managerPinData
+      security:
+        - Authorization: []
     put:
       summary: Update Manager Pin
       operationId: updateCardAcceptorManagerPin
