@@ -178,7 +178,28 @@ paths:
       tags:
         - admin
 components:
-  schemas: {}
+  schemas:
+    CardAcceptorDetails:
+      title: CardAcceptorDetails
+      type: object
+      description: Object describing the full set of details available for a card acceptor. The actual set returned may be dependent on the caller.
+      properties:
+        cardAcceptorGuid:
+          type: string
+        acquirer:
+          type: string
+        mid:
+          type: string
+        name:
+          type: string
+        managerPinSet:
+          type: boolean
+        switchAccessToken:
+          type: string
+        posGuid:
+          type: string
+        state:
+          type: string
   securitySchemes:
     Authorization:
       type: http

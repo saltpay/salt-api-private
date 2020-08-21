@@ -344,6 +344,10 @@ paths:
                   type: string
                 cardholderReceipt:
                   type: string
+                cardToken:
+                  type: string
+                cardExpiry:
+                  type: string
               required:
                 - state
         description: The state must be provided in all update calls. The card fields are required when the state is DECLINED or APPROVED or REVERSED. The authCode field is required when the state is APPROVED.
@@ -704,9 +708,24 @@ paths:
                     type: number
                   message:
                     type: string
+      description: Unlink a terminal from a specific card acceptor
+      tags:
+        - admin
+    get:
+      summary: ''
+      operationId: getTerminalCardAcceptor
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TerminalCardAcceptorResponse'
+      description: Get the details of the card acceptor linked to the terminal
+      security:
+        - Authorization: []
       tags:
         - terminal
-      description: Unlink a terminal from a specific card acceptor
   /terminals/stock/batches/sns:
     post:
       summary: Terminal Stock File Import
@@ -1038,6 +1057,16 @@ components:
           type: string
         terminalDetails:
           $ref: '#/components/schemas/TerminalDetails'
+    TerminalCardAcceptorResponse:
+      title: TerminalCardAcceptorResponse
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        cardAcceptorDetails:
+          $ref: './cardAcceptors.v1.yaml#/components/schemas/CardAcceptorDetails'
   securitySchemes:
     Authorization:
       type: http
