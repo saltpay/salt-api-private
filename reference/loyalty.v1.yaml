@@ -7,7 +7,7 @@ servers:
 paths:
   /loyalty/program:
     post:
-      summary: ''
+      summary: Register Loyalty Program
       operationId: registerLoyaltyProgram
       responses:
         '201':
