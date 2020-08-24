@@ -313,15 +313,20 @@ paths:
                 cardMaskedNumber:
                   type: string
                   maxLength: 19
+                cardToken:
+                  type: string
+                cardExpiry:
+                  type: string
+                  description: Formatted as MMYY
                 cardEntryMode:
                   type: string
                   enum:
-                    - manual
-                    - magstripe
-                    - chip
-                    - contactless_magstripe
-                    - contactless_chip
-                    - other
+                    - ICC
+                    - MSR
+                    - CNP
+                    - UNDEFINED
+                    - CONTACTLESS_ICC
+                    - CONTACTLESS_MSR
                 state:
                   type: string
                   enum:
@@ -343,10 +348,6 @@ paths:
                 cardAcceptorReceipt:
                   type: string
                 cardholderReceipt:
-                  type: string
-                cardToken:
-                  type: string
-                cardExpiry:
                   type: string
               required:
                 - state
@@ -760,7 +761,34 @@ paths:
         description: JSON sent by SNS for a notification
       description: Endpoint that is triggered by SNS when a file is dropped in S3 for batch of new terminals that need to be imported into the system
       tags:
+        - admin
+  '/terminals/{terminalGuid}/enrol_mobile':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+    post:
+      summary: Enrol Mobile Number for Loyalty
+      operationId: enrolMobileNumber
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      tags:
         - terminal
+      security:
+        - Authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrolMobileRequest'
+      description: 'Enrol a Mobile Number with the Loyalty Program associated with the linked Card Acceptor. The system will validate that the Terminal making the call matches the Terminal recorded against the Transaction identified by the transaction ID. It will then retrieve the Loyalty Program GUID. If no Loyalty Program is linked to the Card Acceptor, the call will fail as such. If there is, the system will enrol the Card Token from the transaction with the Loyalty Program before calling the Loyalty Gateway to enrol the mobile number, providing the associated transaction details.'
 components:
   schemas:
     TransactionDetailsSummary:
@@ -801,6 +829,11 @@ components:
           maxLength: 19
         cardSchemeName:
           type: string
+        cardToken:
+          type: string
+        cardExpiry:
+          type: string
+          description: Formatted as MMYY
         authCode:
           type: string
         posTransactionId:
@@ -879,6 +912,11 @@ components:
           maxLength: 19
         cardSchemeName:
           type: string
+        cardToken:
+          type: string
+        cardExpiry:
+          type: string
+          description: Formatted as MMYY
         authCode:
           type: string
         posTransactionId:
@@ -1067,6 +1105,14 @@ components:
           type: string
         cardAcceptorDetails:
           $ref: './cardAcceptors.v1.yaml#/components/schemas/CardAcceptorDetails'
+    EnrolMobileRequest:
+      title: EnrolMobileRequest
+      type: object
+      properties:
+        transactionId:
+          type: integer
+        mobileNumber:
+          type: string
   securitySchemes:
     Authorization:
       type: http

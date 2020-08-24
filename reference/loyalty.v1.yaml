@@ -5,7 +5,7 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /loyalty/program:
+  /loyalty/programs:
     post:
       summary: Register Loyalty Program
       operationId: registerLoyaltyProgram
@@ -18,21 +18,49 @@ paths:
             application/json:
               schema:
                 $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
-      description: 'Registers the Loyalty Program IDs with the Acquire service. This is needed so that Loyalty Providers can enroll cards with the relevant program. It will be called from the Loyalty Service when creating a new program. It will also be indempotent, such that the same call again (i.e. the same combination of parameter values) will still return success if the entity already exists. There will only be a failure if only one or the other parameter already exits. '
+      description: 'Registers the Loyalty Program GUID with the Acquire service. This is needed so that Loyalty Providers can enroll cards with the relevant program. It will be called from the Loyalty Service when creating a new program. It will also be indempotent, such that the same call again (i.e. the same combination of parameter values) will still return success if the entity already exists. There will only be a failure if only one or the other parameter already exits. '
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                loyaltyProgramId:
-                  type: integer
                 loyaltyProgramGuid:
                   type: string
+                name:
+                  type: string
               required:
-                - loyaltyProgramId
                 - loyaltyProgramGuid
+                - name
       tags:
         - admin
+    parameters: []
+  '/loyalty/programs/{loyaltyProgramGuid}':
+    parameters:
+      - schema:
+          type: string
+        name: loyaltyProgramGuid
+        in: path
+        required: true
+    patch:
+      summary: ''
+      operationId: updateLoyaltyProgram
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
+      tags:
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                '':
+                  type: string
 components:
   schemas: {}

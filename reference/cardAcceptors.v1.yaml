@@ -175,6 +175,8 @@ paths:
                   type: string
                 name:
                   type: string
+                loyaltyProgramGuid:
+                  type: string
       tags:
         - admin
 components:
