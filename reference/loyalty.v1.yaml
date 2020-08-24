@@ -2,6 +2,9 @@ openapi: 3.0.0
 info:
   title: Loyalty
   version: '1.0'
+  description: A backend service to assist with managing Loyalty Programs running through the service.
+  contact:
+    name: Salt Group
 servers:
   - url: 'http://localhost:3000'
 paths:
@@ -60,7 +63,19 @@ paths:
             schema:
               type: object
               properties:
-                '':
+                name:
                   type: string
+      description: Update the properties of the Loyalty Program.
 components:
   schemas: {}
+tags:
+  - name: cardAcceptor
+    description: Administer the card acceptors managed by the service
+  - name: admin
+    description: Administer the entities of the service
+  - name: pos
+    description: Methods available to POS systems
+  - name: terminal
+    description: Methods available to terminals
+  - name: model
+    description: Data models used by the API
