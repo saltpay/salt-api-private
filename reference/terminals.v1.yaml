@@ -789,6 +789,54 @@ paths:
             schema:
               $ref: '#/components/schemas/EnrolMobileRequest'
       description: 'Enrol a Mobile Number with the Loyalty Program associated with the linked Card Acceptor. The system will validate that the Terminal making the call matches the Terminal recorded against the Transaction identified by the transaction ID. It will then retrieve the Loyalty Program GUID. If no Loyalty Program is linked to the Card Acceptor, the call will fail as such. If there is, the system will enrol the Card Token from the transaction with the Loyalty Program before calling the Loyalty Gateway to enrol the mobile number, providing the associated transaction details.'
+  '/terminals/{terminalGuid}/reports/transaction_summary':
+    parameters:
+      - schema:
+          type: string
+          minLength: 8
+          maxLength: 8
+        name: terminalGuid
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which to initiate the transaction
+    get:
+      summary: Retrieve summarised transactions
+      operationId: getCardAcceptorSummarisedTransactions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  transactionSummaryReport:
+                    $ref: '#/components/schemas/TransactionSummaryReport'
+      tags:
+        - terminal
+      description: 'Retrieve summarised transactions currently linked to the terminal or based on the query param, the linked cardAcceptor'
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: startDate
+          required: true
+          description: In UTC based on terminal timezone
+        - schema:
+            type: string
+          in: query
+          name: endDate
+          required: true
+          description: In UTC based on terminal timezone
+        - schema:
+            type: boolean
+          in: query
+          name: terminalOnly
+          description: by default this is assumed to be FALSE
 components:
   schemas:
     TransactionDetailsSummary:
@@ -1113,6 +1161,33 @@ components:
           type: integer
         mobileNumber:
           type: string
+    TransactionSummaryReport:
+      title: TransactionSummaryReportResponse
+      type: object
+      properties:
+        mid:
+          type: string
+        name:
+          type: string
+        netSalesAmount:
+          type: integer
+        lineItems:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - SALE
+                  - INVALID SALE
+                  - REFUNDED
+              amount:
+                type: integer
+              count:
+                type: integer
+              currency:
+                type: string
   securitySchemes:
     Authorization:
       type: http
