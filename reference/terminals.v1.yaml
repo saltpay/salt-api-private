@@ -1169,25 +1169,30 @@ components:
           type: string
         name:
           type: string
-        netSalesAmount:
-          type: integer
-        lineItems:
+        transactionSummary:
           type: array
           items:
             type: object
             properties:
-              type:
-                type: string
-                enum:
-                  - SALE
-                  - INVALID SALE
-                  - REFUNDED
-              amount:
-                type: integer
-              count:
+              netSalesAmount:
                 type: integer
               currency:
                 type: string
+              lineItems:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - SALE
+                        - INVALID SALE
+                        - REFUNDED
+                    amount:
+                      type: integer
+                    count:
+                      type: integer
   securitySchemes:
     Authorization:
       type: http
