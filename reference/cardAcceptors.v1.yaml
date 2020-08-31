@@ -18,19 +18,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                  message:
-                    type: string
-                  cardAcceptorDetails:
-                    type: object
-                    properties:
-                      cardAcceptorGuid:
-                        type: string
-                    required:
-                      - cardAcceptorGuid
+                $ref: '#/components/schemas/CardAcceptorDetailsResponse'
       description: Each card acceptor created within the portal will require system credentials that APIs may use to authenticate on behalf of the card acceptor. The credentials are created in Fusion Auth with a preset creation definition.
       requestBody:
         content:
@@ -157,14 +145,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
+                $ref: '#/components/schemas/CardAcceptorDetailsResponse'
         '404':
           description: Card Acceptor Not Found
           content:
             application/json:
               schema:
                 $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
-      description: Update the card acceptor record with latest details needed by the terminal.
+      description: 'Update the card acceptor record with latest details needed by the terminal. This includes the optional Loyalty Program details. If Loyalty Program details are provided, this call will operate within a transaction, during which it will also call the Loyalty Gateway service to update its Card Acceptor with the Loyalty Program linked to the Card Acceptor. If this call fails, the change will be rolled back.'
       requestBody:
         content:
           application/json:
@@ -176,6 +164,8 @@ paths:
                 name:
                   type: string
                 loyaltyProgramGuid:
+                  type: string
+                loyaltyAccessToken:
                   type: string
       tags:
         - admin
@@ -200,8 +190,20 @@ components:
           type: string
         posGuid:
           type: string
+        loyaltyProgramGuid:
+          type: string
         state:
           type: string
+    CardAcceptorDetailsResponse:
+      title: CardAcceptorDetailsResponse
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        cardAcceptorDetails:
+          $ref: '#/components/schemas/CardAcceptorDetails'
   securitySchemes:
     Authorization:
       type: http

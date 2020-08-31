@@ -285,6 +285,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTransactionDetailsResponse'
         '400':
           description: 'Bad request, when field validation fails.'
           content:
@@ -1193,6 +1197,16 @@ components:
                       type: integer
                     count:
                       type: integer
+    UpdateTransactionDetailsResponse:
+      title: UpdateTransactionDetailsResponse
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        promptEnroll:
+          type: boolean
   securitySchemes:
     Authorization:
       type: http
