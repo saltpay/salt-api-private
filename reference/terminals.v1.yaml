@@ -611,6 +611,29 @@ paths:
           in: query
           name: terminalGuid
           description: param only set when requireConfig is true
+  /terminals/link/validate:
+    post:
+      summary: Validate terminal user code
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TerminalDetailsResponse'
+      operationId: linkTerminalValidate
+      description: Validate a user code for the link terminal process. On successful validation return information for the associated terminal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userCode:
+                  type: string
+                clientId:
+                  type: string
   /terminals/link:
     post:
       summary: Link Terminal
