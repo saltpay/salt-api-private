@@ -584,6 +584,8 @@ paths:
                         type: string
                       terminalGuid:
                         type: string
+                      enableLoyaltyRedeem:
+                        type: boolean
                     required:
                       - accessToken
                       - token
@@ -1100,6 +1102,8 @@ components:
               type: string
             mid:
               type: string
+            enableLoyaltyRedeem:
+              type: boolean
     AuthDeviceResponse:
       title: AuthDeviceResponse
       type: object
@@ -1205,7 +1209,7 @@ components:
           type: string
         message:
           type: string
-        promptEnroll:
+        promptEnrol:
           type: boolean
   securitySchemes:
     Authorization:

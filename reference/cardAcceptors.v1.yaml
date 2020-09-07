@@ -18,7 +18,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CardAcceptorDetailsResponse'
+                $ref: '#/components/schemas/CardAcceptorCreateResponse'
       description: Each card acceptor created within the portal will require system credentials that APIs may use to authenticate on behalf of the card acceptor. The credentials are created in Fusion Auth with a preset creation definition.
       requestBody:
         content:
@@ -174,7 +174,7 @@ components:
     CardAcceptorDetails:
       title: CardAcceptorDetails
       type: object
-      description: Object describing the full set of details available for a card acceptor. The actual set returned may be dependent on the caller.
+      description: Object describing the full set of details available for a card acceptor. The actual set will depend on what is avaiable at the time and may be dependent on the caller.
       properties:
         cardAcceptorGuid:
           type: string
@@ -194,6 +194,15 @@ components:
           type: string
         state:
           type: string
+    CardAcceptorCreateDetails:
+      title: CardAcceptorCreateDetails
+      type: object
+      description: Object describing the set of details available for a card acceptor after creation.
+      properties:
+        cardAcceptorGuid:
+          type: string
+      required:
+        - cardAcceptorGuid
     CardAcceptorDetailsResponse:
       title: CardAcceptorDetailsResponse
       type: object
@@ -204,6 +213,16 @@ components:
           type: string
         cardAcceptorDetails:
           $ref: '#/components/schemas/CardAcceptorDetails'
+    CardAcceptorCreateResponse:
+      title: CardAcceptorCreateResponse
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        cardAcceptorDetails:
+          $ref: '#/components/schemas/CardAcceptorCreateDetails'
   securitySchemes:
     Authorization:
       type: http
