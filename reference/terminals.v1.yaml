@@ -614,7 +614,6 @@ paths:
   /terminals/link/validate:
     post:
       summary: Validate terminal user code
-      tags: []
       responses:
         '200':
           description: OK
@@ -634,6 +633,8 @@ paths:
                   type: string
                 clientId:
                   type: string
+      tags:
+        - admin
   /terminals/link:
     post:
       summary: Link Terminal
