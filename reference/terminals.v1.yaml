@@ -355,7 +355,7 @@ paths:
                   type: string
               required:
                 - state
-        description: The state must be provided in all update calls. The card fields are required when the state is DECLINED or APPROVED or REVERSED. The authCode field is required when the state is APPROVED.
+        description: "The state must be provided in all update calls. \nThe card fields are required when the state is DECLINED or APPROVED.\nThe authCode field is required when the state is APPROVED.\nNo fields other than state should be provided when state is REVERSING or REVERSED.\n"
       security:
         - Authorization: []
       parameters:
