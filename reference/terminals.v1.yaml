@@ -331,6 +331,7 @@ paths:
                     - UNDEFINED
                     - CONTACTLESS_ICC
                     - CONTACTLESS_MSR
+                    - ICC_FALLBACK_MSR
                 state:
                   type: string
                   enum:
