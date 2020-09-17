@@ -979,12 +979,13 @@ components:
         cardEntryMode:
           type: string
           enum:
-            - manual
-            - magstripe
-            - chip
-            - contactless_magstripe
-            - contactless_chip
-            - other
+            - ICC
+            - MSR
+            - CNP
+            - UNDEFINED
+            - CONTACTLESS_ICC
+            - CONTACTLESS_MSR
+            - ICC_FALLBACK_MSR
         cardMaskedNumber:
           type: string
           minLength: 8
