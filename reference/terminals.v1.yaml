@@ -356,7 +356,11 @@ paths:
                   type: string
               required:
                 - state
-        description: "The state must be provided in all update calls. \nThe card fields are required when the state is DECLINED or APPROVED.\nThe authCode field is required when the state is APPROVED.\nNo fields other than state should be provided when state is REVERSING or REVERSED.\n"
+        description: |
+          The state must be provided in all update calls. 
+          The card fields are required when the state is DECLINED or APPROVED.
+          The authCode field is required when the state is APPROVED.
+          No fields other than state should be provided when state is REVERSING or REVERSED.
       security:
         - Authorization: []
       parameters:
@@ -948,6 +952,11 @@ components:
           type: string
           description: createDate UTC timezone
           example: 'yyyy-MM-dd HH:mm:ss'
+        accountType:
+          type: string
+          enum:
+            - Credit
+            - Debit
       required:
         - state
         - posTransactionId
@@ -1036,6 +1045,11 @@ components:
           type: string
         cardHolderReceipt:
           type: string
+        accountType:
+          type: string
+          enum:
+            - Credit
+            - Debit
       required:
         - state
         - posTransactionId
@@ -1186,7 +1200,7 @@ components:
         message:
           type: string
         cardAcceptorDetails:
-          $ref: './cardAcceptors.v1.yaml#/components/schemas/CardAcceptorDetails'
+          $ref: ./cardAcceptors.v1.yaml#/components/schemas/CardAcceptorDetails
     EnrolMobileRequest:
       title: EnrolMobileRequest
       type: object
