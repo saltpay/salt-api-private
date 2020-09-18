@@ -354,6 +354,11 @@ paths:
                   type: string
                 cardholderReceipt:
                   type: string
+                accountType:
+                  type: string
+                  enum:
+                    - Credit
+                    - Debit
               required:
                 - state
         description: |
