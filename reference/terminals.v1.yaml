@@ -261,7 +261,6 @@ paths:
       summary: Get Transaction Details
       tags:
         - pos
-        - terminal
       responses:
         '200':
           description: OK
@@ -375,6 +374,39 @@ paths:
           in: header
           name: x-managerPinData
           description: Needs to be validated only if request originates from Terminal and patch is for state reversing
+  '/terminals/{terminalGuid}/transactions/{transactionId}/confirm':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: transactionId
+        in: path
+        required: true
+    get:
+      summary: Confirm Transaction
+      tags:
+        - terminal
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDetailsResponse'
+        '404':
+          description: Terminal or transaction not found for the requesting card acceptor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      operationId: confirmTransaction
+      description: Confirms the transaction and get all the available details needed for processing on the terminal. This call is available to terminals only.
+      security:
+        - Authorization: []
   '/terminals/{terminalGuid}/transactions/{transactionId}/state':
     parameters:
       - schema:
@@ -878,6 +910,41 @@ paths:
           in: query
           name: terminalOnly
           description: by default this is assumed to be FALSE
+  '/terminals/{terminalGuid}/activity_state':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+    put:
+      summary: ''
+      operationId: setActivityState
+      responses:
+        '202':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      description: Endpoint for the Terminal to set its activity state. The intention is to keep it as light and simple as possible.
+      tags:
+        - terminal
+      security:
+        - Authorization: []
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - I
+              - W
+              - B
+          in: query
+          name: activityState
+          description: Sets the Activity State
+          required: true
 components:
   schemas:
     TransactionDetailsSummary:
