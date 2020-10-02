@@ -939,7 +939,6 @@ paths:
             type: string
             enum:
               - I
-              - W
               - B
           in: query
           name: activityState
@@ -1178,6 +1177,9 @@ components:
           type: integer
         message:
           type: string
+        waitingForTerminal:
+          type: boolean
+          description: Set to true if the backend is waiting for confirmation from the terminal
         transactionDetails:
           $ref: '#/components/schemas/TransactionDetails'
     ApiResponse:
