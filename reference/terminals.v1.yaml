@@ -629,6 +629,10 @@ paths:
                         type: string
                       enableLoyaltyRedeem:
                         type: boolean
+                      posName:
+                        type: string
+                      enableStateUpdate:
+                        type: boolean
                     required:
                       - accessToken
                       - token
@@ -1220,6 +1224,10 @@ components:
             mid:
               type: string
             enableLoyaltyRedeem:
+              type: boolean
+            posName:
+              type: string
+            enableStateUpdate:
               type: boolean
     AuthDeviceResponse:
       title: AuthDeviceResponse
