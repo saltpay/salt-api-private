@@ -453,6 +453,38 @@ paths:
       description: Get only the state of the transaction. This can be used to poll while looking for a change in state.
       security:
         - Authorization: []
+    put:
+      summary: Update Transaction State
+      operationId: updateTransactionState
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: 'Bad Request, such as for failed input validation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: 'Unauthorized, such as for invalid credentials'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      description: 'Update the state of the transaction. '
+      security:
+        - Authorization: []
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - Reversing
+              - Cancelled
+          in: query
+          name: state
+          required: true
+      tags:
+        - pos
   '/terminals/{terminalGuid}/transactions/{transactionId}/events':
     parameters:
       - schema:
