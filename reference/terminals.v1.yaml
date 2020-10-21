@@ -429,6 +429,8 @@ paths:
                 properties:
                   state:
                     type: string
+                  waitingForConfirmation:
+                    type: boolean
         '404':
           description: Terminal or transaction not found for the requesting card acceptor
           content:
@@ -457,8 +459,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-        '401':
-          description: 'Unauthorized, such as for invalid credentials'
+        '403':
+          description: 'Forbidden, such as for invalid credentials'
           content:
             application/json:
               schema:
@@ -471,7 +473,6 @@ paths:
             type: string
             enum:
               - Reversing
-              - Cancelled
           in: query
           name: state
           required: true
@@ -1201,7 +1202,7 @@ components:
           type: integer
         message:
           type: string
-        waitingForTerminal:
+        waitingForConfirmation:
           type: boolean
           description: Set to true if the backend is waiting for confirmation from the terminal
         transactionDetails:
