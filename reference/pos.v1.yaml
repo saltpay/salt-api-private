@@ -39,7 +39,7 @@ paths:
               $ref: '#/components/schemas/posDetailsRequest'
         description: ''
       tags:
-        - pos
+        - admin
     parameters: []
     get:
       summary: Retrieve POS provider details
@@ -65,7 +65,7 @@ paths:
         - Authorization: []
       parameters: []
       tags:
-        - pos
+        - admin
   '/pos/{posGuid}/card_acceptors':
     post:
       summary: Advise of new card acceptors
@@ -134,6 +134,33 @@ paths:
         name: posGuid
         in: path
         required: true
+  '/pos/{posGuid}':
+    parameters:
+      - schema:
+          type: string
+        name: posGuid
+        in: path
+        required: true
+    patch:
+      summary: ''
+      operationId: updatePos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PosDetailsResponse'
+      tags:
+        - admin
+      description: Update the details of the indicated pos provider.
+      security:
+        - Authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/posDetailsRequest'
 components:
   schemas:
     posDetailsRequest:
@@ -157,6 +184,17 @@ components:
           enum:
             - rest
           description: type of callback system being supported
+        webhookAccessToken:
+          type: string
+          description: 'Used to specify the Bearer token when the webhookTokenType is Bearer, or the full header value when it is Custom'
+        webhookTokenType:
+          type: string
+          enum:
+            - Bearer
+            - Custom
+        webhookTokenHeader:
+          type: string
+          description: Used to specify the header when webhookTokenType is Custom
       required:
         - name
         - description
@@ -176,6 +214,24 @@ components:
           type: string
         supportPhone:
           type: string
+        webhookUrl:
+          type: string
+        webhookType:
+          type: string
+          enum:
+            - rest
+          description: type of callback system being supported
+        webhookAccessToken:
+          type: string
+          description: 'Used to specify the Bearer token when the webhookTokenType is Bearer, or the full header value when it is Custom'
+        webhookTokenType:
+          type: string
+          enum:
+            - Bearer
+            - Custom
+        webhookTokenHeader:
+          type: string
+          description: Used to specify the header when webhookTokenType is Custom
     posLocations:
       title: posLocations
       type: object
@@ -189,6 +245,16 @@ components:
       required:
         - name
         - posLocationId
+    PosDetailsResponse:
+      title: PosDetailsResponse
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        posDetails:
+          $ref: '#/components/schemas/posDetails'
   securitySchemes:
     Authorization:
       type: http

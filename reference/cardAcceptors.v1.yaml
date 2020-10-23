@@ -42,6 +42,31 @@ paths:
       tags:
         - admin
     parameters: []
+    get:
+      summary: ''
+      operationId: getCardAcceptors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardAcceptorInfoListResponse'
+      description: |-
+        Retrieve a list of card acceptors linked to the provided JWT. Optionally filtered by the fields provided.
+
+        Only supported for POS applications.
+      security:
+        - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: acquirer
+        - schema:
+            type: string
+          in: query
+          name: mid
   '/card_acceptors/{cardAcceptorGuid}/manager_pin':
     parameters:
       - schema:
@@ -151,7 +176,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
+                $ref: ./terminals.v1.yaml#/components/schemas/ApiResponse
       description: 'Update the card acceptor record with latest details needed by the terminal. This includes the optional Loyalty Program details. If Loyalty Program details are provided, this call will operate within a transaction, during which it will also call the Loyalty Gateway service to update its Card Acceptor with the Loyalty Program linked to the Card Acceptor. If this call fails, the change will be rolled back.'
       requestBody:
         content:
@@ -223,6 +248,32 @@ components:
           type: string
         cardAcceptorDetails:
           $ref: '#/components/schemas/CardAcceptorCreateDetails'
+    CardAcceptorInfo:
+      title: CardAcceptorInfo
+      type: object
+      properties:
+        cardAcceptorGuid:
+          type: string
+        acquirer:
+          type: string
+        mid:
+          type: string
+        name:
+          type: string
+        state:
+          type: string
+    CardAcceptorInfoListResponse:
+      title: CardAcceptorInfoListResponse
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        cardAcceptorList:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardAcceptorInfo'
   securitySchemes:
     Authorization:
       type: http
