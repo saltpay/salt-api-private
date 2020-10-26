@@ -10,7 +10,7 @@ servers:
 paths:
   /pos:
     post:
-      summary: Create  a pos provider
+      summary: Register a POS
       operationId: createpos
       responses:
         '200':
@@ -31,7 +31,10 @@ paths:
                         type: string
                     required:
                       - posGuid
-      description: Create new pos provider that has been allowed to integrate with Salt API
+      description: |-
+        Register a new pos that has been allowed to integrate with Salt API. For this call, the name, description and supportEmail are required fields.
+
+        The webhookType and webhookUrl fields must either both be set, or neither of them. Likewise for webhookTokenType and webhookAccessToken. The latter should only be considered if there is a webhookUrl provided.
       requestBody:
         content:
           application/json:
@@ -42,7 +45,7 @@ paths:
         - admin
     parameters: []
     get:
-      summary: Retrieve POS provider details
+      summary: Retrieve POS details
       operationId: getpos
       responses:
         '200':
@@ -68,7 +71,7 @@ paths:
         - admin
   '/pos/{posGuid}/card_acceptors':
     post:
-      summary: Advise of new card acceptors
+      summary: Link Card Acceptor to POS
       operationId: postCardAcceptors
       responses:
         '200':
@@ -142,7 +145,7 @@ paths:
         in: path
         required: true
     patch:
-      summary: ''
+      summary: Update a POS
       operationId: updatePos
       responses:
         '200':
@@ -195,9 +198,6 @@ components:
         webhookTokenHeader:
           type: string
           description: Used to specify the header when webhookTokenType is Custom
-      required:
-        - name
-        - description
     posDetails:
       title: posDetails
       type: object
