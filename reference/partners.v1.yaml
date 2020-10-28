@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: Partners
+  version: '1.0'
+  contact:
+    name: SaltPay Group
+  description: A backend module to manage Partners using the platform.
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /partners:
+    post:
+      summary: ''
+      operationId: registerPartner
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerResponse'
+      description: Registers a new partner. All fields are required.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerProperties'
+      tags:
+        - admin
+  '/partners/{partnerGuid}':
+    parameters:
+      - schema:
+          type: string
+        name: partnerGuid
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - admin
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerResponse'
+      operationId: getPartner
+      description: Get the full details of a Partner.
+    patch:
+      summary: ''
+      operationId: updatePartner
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerResponse'
+      description: Update the properties of a Partner.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerProperties'
+      tags:
+        - admin
+components:
+  schemas:
+    PartnerProperties:
+      title: PartnerProperties
+      type: object
+      properties:
+        pushNotificationApiKey:
+          type: string
+        emailSender:
+          type: string
+        registerCardAcceptorTemplateId:
+          type: string
+        registerTerminalTemplateId:
+          type: string
+        deregisterTerminalTemplateId:
+          type: string
+    Partner:
+      title: Partner
+      type: object
+      properties:
+        guid:
+          type: string
+        pushNotificationApiKey:
+          type: string
+        emailSender:
+          type: string
+        registerCardAcceptorTemplateId:
+          type: string
+        registerTerminalTemplateId:
+          type: string
+        deregisterTerminalTemplateId:
+          type: string
+      required:
+        - guid
+        - pushNotificationApiKey
+        - emailSender
+        - registerCardAcceptorTemplateId
+        - registerTerminalTemplateId
+        - deregisterTerminalTemplateId
+    PartnerResponse:
+      title: PartnerResponse
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+        partner:
+          $ref: '#/components/schemas/Partner'
+      required:
+        - code
+        - message
+tags:
+  - name: admin
+    description: Administer the terminals managed by the service

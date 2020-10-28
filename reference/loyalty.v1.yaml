@@ -2,9 +2,9 @@ openapi: 3.0.0
 info:
   title: Loyalty
   version: '1.0'
-  description: A backend service to assist with managing Loyalty Programs running through the service.
+  description: A backend module to assist with managing Loyalty Programs running through the service.
   contact:
-    name: Salt Group
+    name: SaltPay Group
 servers:
   - url: 'http://localhost:3000'
 paths:
@@ -20,7 +20,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
+                $ref: ./terminals.v1.yaml#/components/schemas/ApiResponse
       description: 'Registers the Loyalty Program GUID with the Acquire service. This is needed so that Loyalty Providers can enroll cards with the relevant program. It will be called from the Loyalty Service when creating a new program. It will also be indempotent, such that the same call again (i.e. the same combination of parameter values) will still return success if the entity already exists. There will only be a failure if only one or the other parameter already exits. '
       requestBody:
         content:
@@ -54,7 +54,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: './terminals.v1.yaml#/components/schemas/ApiResponse'
+                $ref: ./terminals.v1.yaml#/components/schemas/ApiResponse
       tags:
         - admin
       requestBody:
@@ -68,6 +68,7 @@ paths:
       description: Update the properties of the Loyalty Program.
 components:
   schemas: {}
+  securitySchemes: {}
 tags:
   - name: cardAcceptor
     description: Administer the card acceptors managed by the service

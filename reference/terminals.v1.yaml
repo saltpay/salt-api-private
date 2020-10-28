@@ -1,10 +1,10 @@
 openapi: 3.0.0
 info:
-  title: terminals
+  title: Terminals
   version: '1.0'
-  description: A backend service to enable a cloud orchestrated Terminal solution for POS systems
+  description: A backend module to enable a cloud orchestrated Terminal solution for POS systems
   contact:
-    name: Salt Group
+    name: SaltPay Group
 servers:
   - url: 'http://localhost:3100'
 paths:
@@ -123,6 +123,11 @@ paths:
         description: ''
       security:
         - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
     parameters:
       - schema:
           type: string
@@ -188,6 +193,10 @@ paths:
           in: header
           name: x-managerPinData
           description: Needs to be validated only if request originates from Terminal and transactionType is Refund
+        - schema:
+            type: string
+          in: query
+          name: locale
     get:
       summary: Retrieve transaction for the terminals card acceptor
       operationId: getCardAcceptorTransactions
@@ -237,6 +246,10 @@ paths:
             type: string
           in: query
           name: maxDate
+        - schema:
+            type: string
+          in: query
+          name: locale
   '/terminals/{terminalGuid}/transactions/{transactionId}':
     parameters:
       - schema:
@@ -272,6 +285,11 @@ paths:
       description: Get all the available details of the transaction.
       security:
         - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
     patch:
       summary: Update Transaction Details
       operationId: updateTransaction
@@ -368,6 +386,10 @@ paths:
           in: header
           name: x-managerPinData
           description: Needs to be validated only if request originates from Terminal and patch is for state reversing
+        - schema:
+            type: string
+          in: query
+          name: locale
   '/terminals/{terminalGuid}/transactions/{transactionId}/confirm':
     parameters:
       - schema:
@@ -401,6 +423,11 @@ paths:
       description: Confirms the transaction and get all the available details needed for processing on the terminal. This call is available to terminals only.
       security:
         - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
   '/terminals/{terminalGuid}/transactions/{transactionId}/state':
     parameters:
       - schema:
@@ -579,6 +606,11 @@ paths:
         description: 'All fields are mandatory, deviceCode is retrieved on the /auth/device endpoint and the clientId is a config value that represents the application in Fusion Auth.'
       tags:
         - terminal
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
   /terminals/auth/device:
     post:
       summary: Request Device Code
@@ -605,14 +637,21 @@ paths:
                   type: string
                 serial:
                   type: string
+                partnerGuid:
+                  type: string
               required:
                 - clientId
-                - model
                 - brand
+                - model
                 - serial
         description: Device information for the current device requiring to be authenticated
       tags:
         - terminal
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
   /terminals/auth/refresh:
     post:
       summary: Request new JWT based on valid Refresh Token
@@ -681,6 +720,10 @@ paths:
           in: query
           name: terminalGuid
           description: param only set when requireConfig is true
+        - schema:
+            type: string
+          in: query
+          name: locale
   /terminals/link/validate:
     post:
       summary: Validate terminal user code
@@ -827,6 +870,11 @@ paths:
         - Authorization: []
       tags:
         - terminal
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
   /terminals/stock/batches/sns:
     post:
       summary: Terminal Stock File Import
@@ -888,7 +936,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/EnrolMobileRequest'
-      description: 'Enrol a Mobile Number with the Loyalty Program associated with the linked Card Acceptor. The system will validate that the Terminal making the call matches the Terminal recorded against the Transaction identified by the transaction ID. It will then retrieve the Loyalty Program GUID. If no Loyalty Program is linked to the Card Acceptor, the call will fail as such. If there is, the system will enrol the Card Token from the transaction with the Loyalty Program before calling the Loyalty Gateway to enrol the mobile number, providing the associated transaction details.'
+      description: 'Enrol a Mobile Number with the Loyalty Program associated with the linked Card Acceptor. The system will validate that the Terminal making the call matches the Terminal recorded against the Transaction identified by the transaction ID. It will then retrieve the Loyalty Program GUID. If no Loyalty Program is linked to the Card Acceptor, the call will fail as such. If there is, the system will enrol the Card Token from the transaction with the Loyalty Program before calling the Loyalty Gateway to enrol the mobile number, providing the associated transaction details as well as the locale.'
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
   '/terminals/{terminalGuid}/reports/transaction_summary':
     parameters:
       - schema:
@@ -923,18 +976,22 @@ paths:
           in: query
           name: startDate
           required: true
-          description: In UTC based on terminal timezone
+          description: In ISO 8601 UTC based on terminal timezone
         - schema:
             type: string
           in: query
           name: endDate
           required: true
-          description: In UTC based on terminal timezone
+          description: In ISO 8601 UTC based on terminal timezone
         - schema:
             type: boolean
           in: query
           name: terminalOnly
           description: by default this is assumed to be FALSE
+        - schema:
+            type: string
+          in: query
+          name: locale
   '/terminals/{terminalGuid}/activity_state':
     parameters:
       - schema:
@@ -969,6 +1026,10 @@ paths:
           name: activityState
           description: Sets the Activity State
           required: true
+        - schema:
+            type: string
+          in: query
+          name: locale
 components:
   schemas:
     TransactionDetailsSummary:

@@ -1,10 +1,10 @@
 openapi: 3.0.0
 info:
-  title: cardAcceptors
+  title: Card Acceptors
   version: '1.0'
-  description: A backend service to enable a cloud orchestrated Terminal solution for POS systems
+  description: A backend module to enable a cloud orchestrated Terminal solution for POS systems
   contact:
-    name: Salt Group
+    name: SaltPay Group
 servers:
   - url: 'http://localhost:3100'
 paths:
@@ -26,17 +26,20 @@ paths:
             schema:
               type: object
               properties:
-                mid:
+                partnerGuid:
                   type: string
+                  description: Optional for backwards compatibility for now. Will default to service configured value if not provided.
                 acquirer:
                   type: string
-                switchAccessToken:
+                mid:
                   type: string
                 name:
                   type: string
+                switchAccessToken:
+                  type: string
               required:
-                - mid
                 - acquirer
+                - mid
                 - name
         description: MID for the card acceptor auth account being created
       tags:
@@ -67,6 +70,8 @@ paths:
             type: string
           in: query
           name: mid
+      tags:
+        - pos
   '/card_acceptors/{cardAcceptorGuid}/manager_pin':
     parameters:
       - schema:
@@ -111,6 +116,11 @@ paths:
                 - managerPinData
       security:
         - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
     put:
       summary: Update Manager Pin
       operationId: updateCardAcceptorManagerPin
@@ -282,21 +292,11 @@ components:
 tags:
   - name: cardAcceptor
     description: Administer the card acceptors managed by the service
-    externalDocs:
-      url: 'http://terminals.somewhere.com/admin.htm'
   - name: admin
     description: Administer the terminals managed by the service
-    externalDocs:
-      url: 'http://terminals.somewhere.com/admin.htm'
   - name: pos
     description: Methods available to POS systems
-    externalDocs:
-      url: 'http://terminals.somewhere.com/pos.htm'
   - name: terminal
     description: Methods available to terminals
-    externalDocs:
-      url: 'http://terminals.somewhere.com/terminals.htm'
   - name: model
     description: Data models used by the API
-    externalDocs:
-      url: 'http://terminals.somewhere.com/models.htm'
