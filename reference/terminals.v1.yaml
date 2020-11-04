@@ -454,10 +454,19 @@ paths:
               schema:
                 type: object
                 properties:
-                  state:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  transactionState:
                     type: string
                   waitingForConfirmation:
                     type: boolean
+                required:
+                  - code
+                  - message
+                  - transactionState
+                  - waitingForConfirmation
         '404':
           description: Terminal or transaction not found for the requesting card acceptor
           content:
