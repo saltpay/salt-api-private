@@ -10,7 +10,7 @@ servers:
 paths:
   /partners:
     post:
-      summary: ''
+      summary: Register Partner
       operationId: registerPartner
       responses:
         '200':
@@ -19,7 +19,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PartnerResponse'
-      description: Registers a new partner. All fields are required.
+      description: Registers a new partner. For this call all fields are required.
       requestBody:
         content:
           application/json:
@@ -35,7 +35,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: Get Partner
       tags:
         - admin
       responses:
@@ -48,7 +48,7 @@ paths:
       operationId: getPartner
       description: Get the full details of a Partner.
     patch:
-      summary: ''
+      summary: Update Partner
       operationId: updatePartner
       responses:
         '200':
@@ -73,6 +73,8 @@ components:
       properties:
         pushNotificationApiKey:
           type: string
+        emailSenderApiKey:
+          type: string
         emailSender:
           type: string
         registerCardAcceptorTemplateId:
@@ -89,6 +91,8 @@ components:
           type: string
         pushNotificationApiKey:
           type: string
+        emailSenderApiKey:
+          type: string
         emailSender:
           type: string
         registerCardAcceptorTemplateId:
@@ -104,6 +108,7 @@ components:
         - registerCardAcceptorTemplateId
         - registerTerminalTemplateId
         - deregisterTerminalTemplateId
+        - emailSenderApiKey
     PartnerResponse:
       title: PartnerResponse
       type: object
