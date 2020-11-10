@@ -1125,6 +1125,10 @@ components:
             - Credit
             - Debit
             - Unknown
+        localDate:
+          type: string
+          example: '2020-10-15T15:07:36'
+          description: 'Local Date of the entity starting the transaction, in ISO 8601 local format (yyyy-MM-dd’T’HH:mm:ss)'
       required:
         - state
         - posTransactionId
@@ -1219,6 +1223,10 @@ components:
             - Credit
             - Debit
             - Unknown
+        localDate:
+          type: string
+          example: '2020-10-15T15:07:36'
+          description: 'Local Date of the entity starting the transaction, in ISO 8601 local format (yyyy-MM-dd’T’HH:mm:ss)'
       required:
         - state
         - posTransactionId
@@ -1257,6 +1265,10 @@ components:
         originalTransactionId:
           type: integer
           description: 'Original transaction that the refund is based on, required field for refunds'
+        localDate:
+          type: string
+          example: '2020-10-15T15:07:36'
+          description: 'Local Date of the entity starting the transaction, in ISO 8601 local format (yyyy-MM-dd’T’HH:mm:ss)'
       required:
         - posTransactionId
         - currency
