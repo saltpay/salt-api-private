@@ -27,6 +27,19 @@ paths:
               $ref: '#/components/schemas/PartnerProperties'
       tags:
         - admin
+    get:
+      summary: ''
+      operationId: getPartners
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerListResponse'
+      description: Retrieve a list of all available partners.
+      tags:
+        - admin
   '/partners/{partnerGuid}':
     parameters:
       - schema:
@@ -71,6 +84,8 @@ components:
       title: PartnerProperties
       type: object
       properties:
+        name:
+          type: string
         pushNotificationApiKey:
           type: string
         emailSenderApiKey:
@@ -89,6 +104,8 @@ components:
       properties:
         guid:
           type: string
+        name:
+          type: string
         pushNotificationApiKey:
           type: string
         emailSenderApiKey:
@@ -104,21 +121,39 @@ components:
       required:
         - guid
         - pushNotificationApiKey
+        - emailSenderApiKey
         - emailSender
         - registerCardAcceptorTemplateId
         - registerTerminalTemplateId
         - deregisterTerminalTemplateId
-        - emailSenderApiKey
+        - name
     PartnerResponse:
       title: PartnerResponse
       type: object
       properties:
         code:
-          type: number
+          type: integer
         message:
           type: string
         partner:
           $ref: '#/components/schemas/Partner'
+      required:
+        - code
+        - message
+    PartnerListResponse:
+      title: PartnerListResponse
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        partnerList:
+          type:
+            - string
+            - array
+          items:
+            $ref: '#/components/schemas/Partner'
       required:
         - code
         - message
