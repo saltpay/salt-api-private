@@ -149,9 +149,7 @@ components:
         message:
           type: string
         partnerList:
-          type:
-            - string
-            - array
+          type: array
           items:
             $ref: '#/components/schemas/Partner'
       required:
