@@ -700,6 +700,8 @@ paths:
                         type: string
                       enableLoyaltyRedeem:
                         type: boolean
+                      enableLoyaltyEnrolment:
+                        type: boolean
                       posName:
                         type: string
                       enableStateUpdate:
@@ -1327,6 +1329,8 @@ components:
             mid:
               type: string
             enableLoyaltyRedeem:
+              type: boolean
+            enableLoyaltyEnrolment:
               type: boolean
             posName:
               type: string
