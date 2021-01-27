@@ -250,6 +250,121 @@ paths:
             type: string
           in: query
           name: locale
+  '/terminals/{terminalGuid}/transaction_requests':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which to initiate the transaction
+    post:
+      summary: Start Transaction Request
+      operationId: startTransactionRequest
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionRequestDetailsResponse'
+        '404':
+          description: Terminal not found for the requesting card acceptor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error for when the service itself fails.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '502':
+          description: For when the request to Firebase fails
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              examples:
+                Request to Firebase timed out:
+                  value:
+                    responseCode: -100
+                    responseMsg: Connection timeout while calling Firebase
+      description: 'Intiate a request to a terminal to perform a transaction. If the terminal exists and is linked to the card acceptor making the request, on object containing only the Transaction ID will be pushed to the terminal and a TransactionRequestDetails response will be returned. The terminal will then call getTransaction to fetch the transaction details.'
+      tags:
+        - pos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionRequest'
+            examples: {}
+      security:
+        - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: x-managerPinData
+          description: Needs to be validated only if request originates from Terminal and transactionType is Refund
+        - schema:
+            type: string
+          in: query
+          name: locale
+    get:
+      summary: Retrieve transaction requests for the terminals card acceptor
+      operationId: getCardAcceptorTransactionRequests
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  transactionDetailsList:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TransactionRequestDetailsSummary'
+      tags:
+        - terminal
+      description: Retrieve transaction requests currently linked to the terminals current cardAcceptor
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: pageOffset
+          description: 'If pageSize is specified, this is the page offset.'
+        - schema:
+            type: integer
+          in: query
+          name: pageSize
+          description: Specify in order to retrieve a paged response
+        - schema:
+            type: string
+          in: query
+          name: authCode
+        - schema:
+            type: integer
+          in: query
+          name: requestAmount
+        - schema:
+            type: string
+          in: query
+          name: minDate
+        - schema:
+            type: string
+          in: query
+          name: maxDate
+        - schema:
+            type: string
+          in: query
+          name: locale
   '/terminals/{terminalGuid}/transactions/{transactionId}':
     parameters:
       - schema:
@@ -290,9 +405,63 @@ paths:
             type: string
           in: query
           name: locale
-    patch:
-      summary: Update Transaction Details
-      operationId: updateTransaction
+  '/terminals/{terminalGuid}/transaction_requests/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which the transaction took place
+      - schema:
+          type: integer
+        name: id
+        in: path
+        required: true
+        description: Transaction Request ID of the transaction request for which to retrieve the data
+    get:
+      summary: Get Transaction Request Details
+      tags:
+        - pos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionRequestDetailsResponse'
+        '404':
+          description: Terminal or transaction request not found for the requesting card acceptor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      operationId: getTransactionRequest
+      description: Get all the available details of the transaction request.
+      security:
+        - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
+  '/terminals/{terminalGuid}/transaction_requests/{id}/card/handpoint':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which the transaction took place
+      - schema:
+          type: integer
+        name: id
+        in: path
+        required: true
+        description: Create handpoint card transaction from transsaction request details
+    post:
+      summary: Create Card Transaction
+      operationId: createCardTransaction
       responses:
         '200':
           description: OK
@@ -374,7 +543,7 @@ paths:
               required:
                 - state
         description: |
-          The state must be provided in all update calls. 
+          The state must be provided in all update calls.
           The card fields are required when the state is DECLINED or APPROVED.
           The authCode field is required when the state is APPROVED.
           No fields other than state should be provided when state is REVERSING or REVERSED.
@@ -421,6 +590,44 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
       operationId: confirmTransaction
       description: Confirms the transaction and get all the available details needed for processing on the terminal. This call is available to terminals only.
+      security:
+        - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
+  '/terminals/{terminalGuid}/transaction_requests/{id}/confirm':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Confirm Transaction Request
+      tags:
+        - terminal
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDetailsResponse'
+        '404':
+          description: Terminal or transaction not found for the requesting card acceptor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      operationId: confirmTransactionRequest
+      description: Confirms the transaction request and get all the available details needed for processing on the terminal. This call is available to terminals only.
       security:
         - Authorization: []
       parameters:
@@ -483,6 +690,62 @@ paths:
       description: Get only the state of the transaction. This can be used to poll while looking for a change in state.
       security:
         - Authorization: []
+  '/terminals/{terminalGuid}/transaction_requests/{id}/state':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        description: Terminal ID of the terminal on which the transaction took place
+        required: true
+      - schema:
+          type: integer
+        name: id
+        in: path
+        required: true
+        description: Transaction Request ID of the transaction request for which to retrieve the data
+    get:
+      summary: Get Transaction State
+      tags:
+        - pos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  transactionState:
+                    type: string
+                  waitingForConfirmation:
+                    type: boolean
+                required:
+                  - code
+                  - message
+                  - transactionState
+                  - waitingForConfirmation
+        '404':
+          description: Terminal or transaction not found for the requesting card acceptor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      operationId: getTransactionRequestState
+      description: Get only the state of the transaction. This can be used to poll while looking for a change in state.
+      security:
+        - Authorization: []
+
     put:
       summary: Update Transaction State
       operationId: updateTransactionState
@@ -1003,6 +1266,56 @@ paths:
             type: string
           in: query
           name: locale
+  '/terminals/{terminalGuid}/reports/transaction_requests_summary':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which to initiate the transaction
+    get:
+      summary: Retrieve summarised transaction requests
+      operationId: getCardAcceptorSummarisedTransactionRequests
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  transactionSummaryReport:
+                    $ref: '#/components/schemas/TransactionSummaryReport'
+      tags:
+        - terminal
+      description: 'Retrieve summarised transaction requests currently linked to the terminal or based on the query param, the linked cardAcceptor'
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: startDate
+          required: true
+          description: In ISO 8601 UTC based on terminal timezone
+        - schema:
+            type: string
+          in: query
+          name: endDate
+          required: true
+          description: In ISO 8601 UTC based on terminal timezone
+        - schema:
+            type: boolean
+          in: query
+          name: terminalOnly
+          description: by default this is assumed to be FALSE
+        - schema:
+            type: string
+          in: query
+          name: locale
   '/terminals/{terminalGuid}/activity_state':
     parameters:
       - schema:
@@ -1136,6 +1449,100 @@ components:
         - posTransactionId
         - currency
         - requestAmount
+    TransactionRequestDetailsSummary:
+      title: TransactionRequestDetailsSummary
+      type: object
+      description: This object describes the general list of fields relevant when retrieving a transaction request.
+      properties:
+        id:
+          type: integer
+        totalAmount:
+          type: integer
+          description: 'Total Transaction Amount, including tip.'
+        approvedTotalAmount:
+          type: integer
+          description: 'The Approved Total Transaction Amount, including tip.'
+        tipAmount:
+          type: integer
+          description: Tip Amount.
+        approvedTipAmount:
+          type: integer
+          description: The Approved Tip Amount.
+        state:
+          type: string
+          enum:
+            - APPROVED
+            - DECLINED
+            - CANCELLED
+            - REVERSING
+            - REVERSED
+            - FAILED
+            - PENDING
+        tenderId:
+          type: integer
+        tenderType:
+          type: string
+          enum:
+            - card
+            - paybylink
+        tenderDescription:
+          type: string
+          minLength: 8
+          maxLength: 19
+        tenderInfo:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - card
+                - paybylink
+            tenderSummary:
+              type: object
+              properties:
+                switchTransactionId:
+                  type: string
+                cardType:
+                  type: string
+                  enum:
+                    - Credit
+                    - Debit
+                    - Unknown
+                cardSchemeName:
+                  type: string
+        posTransactionId:
+          type: string
+          description: Transaction ID as provided by the POS for support purposes.
+        currency:
+          type: string
+          description: ISO 4217 Alpha-3 currency code
+        requestAmount:
+          type: integer
+          description: 'Requested Transaction Amount, excluding tip.'
+        approvedRequestAmount:
+          type: integer
+          description: 'Requested Transaction Amount, excluding tip.'
+        cashierId:
+          type: string
+          description: ''
+        transactionType:
+          type: string
+          enum:
+            - payment
+            - refund
+        createDate:
+          type: string
+          description: createDate UTC timezone
+          example: 'yyyy-MM-dd HH:mm:ss'
+        localDate:
+          type: string
+          example: '2020-10-15T15:07:36'
+          description: 'Local Date of the entity starting the transaction, in ISO 8601 local format (yyyy-MM-dd’T’HH:mm:ss)'
+      required:
+        - state
+        - posTransactionId
+        - currency
+        - requestAmount
     TransactionDetails:
       title: TransactionDetails
       type: object
@@ -1234,6 +1641,100 @@ components:
         - posTransactionId
         - currency
         - requestAmount
+    TransactionRequestDetails:
+      title: TransactionRequestDetails
+      type: object
+      description: This object describes the general list of fields relevant when retrieving a transaction request.
+      properties:
+        id:
+          type: integer
+        totalAmount:
+          type: integer
+          description: 'Total Transaction Amount, including tip.'
+        approvedTotalAmount:
+          type: integer
+          description: 'The Approved Total Transaction Amount, including tip.'
+        tipAmount:
+          type: integer
+          description: Tip Amount.
+        approvedTipAmount:
+          type: integer
+          description: The Approved Tip Amount.
+        state:
+          type: string
+          enum:
+            - APPROVED
+            - DECLINED
+            - CANCELLED
+            - REVERSING
+            - REVERSED
+            - FAILED
+            - PENDING
+        tenderId:
+          type: integer
+        tenderType:
+          type: string
+          enum:
+            - card
+            - paybylink
+        tenderDescription:
+          type: string
+          minLength: 8
+          maxLength: 19
+        tenderInfo:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - card
+                - paybylink
+            tenderSummary:
+              type: object
+              properties:
+                switchTransactionId:
+                  type: string
+                cardType:
+                  type: string
+                  enum:
+                    - Credit
+                    - Debit
+                    - Unknown
+                cardSchemeName:
+                  type: string
+        posTransactionId:
+          type: string
+          description: Transaction ID as provided by the POS for support purposes.
+        currency:
+          type: string
+          description: ISO 4217 Alpha-3 currency code
+        requestAmount:
+          type: integer
+          description: 'Requested Transaction Amount, excluding tip.'
+        approvedRequestAmount:
+          type: integer
+          description: 'Requested Transaction Amount, excluding tip.'
+        cashierId:
+          type: string
+          description: ''
+        transactionType:
+          type: string
+          enum:
+            - payment
+            - refund
+        createDate:
+          type: string
+          description: createDate UTC timezone
+          example: 'yyyy-MM-dd HH:mm:ss'
+        localDate:
+          type: string
+          example: '2020-10-15T15:07:36'
+          description: 'Local Date of the entity starting the transaction, in ISO 8601 local format (yyyy-MM-dd’T’HH:mm:ss)'
+      required:
+        - state
+        - posTransactionId
+        - currency
+        - requestAmount
     TransactionRequest:
       title: TransactionRequest
       type: object
@@ -1291,6 +1792,20 @@ components:
           description: Set to true if the backend is waiting for confirmation from the terminal
         transactionDetails:
           $ref: '#/components/schemas/TransactionDetails'
+    TransactionRequestDetailsResponse:
+      title: TransactionRequestDetailsResponse
+      type: object
+      description: The API level response object that contains transaction request details.
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        waitingForConfirmation:
+          type: boolean
+          description: Set to true if the backend is waiting for confirmation from the terminal
+        transactionRequestDetails:
+          $ref: '#/components/schemas/TransactionRequestDetails'
     ApiResponse:
       title: ApiResponse
       type: object
@@ -1443,6 +1958,27 @@ components:
           type: string
         promptEnrol:
           type: boolean
+    TenderInfo:
+      title: UpdateTransactionDetailsResponse
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - card
+            - paybylink
+        tenderSummary:
+          type: object
+          properties:
+            switchTransactionId:
+              type: string
+            cardType:
+              type: string
+              enum:
+                - Credit
+                - Debit
+                - Unknown
+
   securitySchemes:
     Authorization:
       type: http
