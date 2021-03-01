@@ -291,7 +291,10 @@ paths:
                   value:
                     responseCode: -100
                     responseMsg: Connection timeout while calling Firebase
-      description: 'Intiate a request to a terminal to perform a transaction. If the terminal exists and is linked to the card acceptor making the request, on object containing only the Transaction ID will be pushed to the terminal and a TransactionRequestDetails response will be returned. The terminal will then call getTransaction to fetch the transaction details.'
+      description: |-
+        Intiate a request to a terminal to perform a transaction. If the terminal exists and is linked to the card acceptor making the request, on object containing only the Transaction ID will be pushed to the terminal and a TransactionRequestDetails response will be returned. The terminal will then call getTransaction to fetch the transaction details.
+
+        The configVersions field in the request shall only be allowed if the caller is a terminal. Further, the configVersions field in the response shall only be provided if the configVersions field was provided in the request. 
       tags:
         - pos
       requestBody:
@@ -635,6 +638,37 @@ paths:
             type: string
           in: query
           name: locale
+    post:
+      operationId: confirmTransactionRequestWithBody
+      summary: Confirm Transaction Request (With Body)
+      tags:
+        - terminal
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionRequestDetailsResponse'
+        '404':
+          description: Terminal or transaction not found for the requesting card acceptor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      description: Confirms the transaction request and get all the available details needed for processing on the terminal. This call is available to terminals only.
+      security:
+        - Authorization: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmTransactionRequest'
   '/terminals/{terminalGuid}/transactions/{transactionId}/state':
     parameters:
       - schema:
@@ -745,7 +779,6 @@ paths:
       description: Get only the state of the transaction. This can be used to poll while looking for a change in state.
       security:
         - Authorization: []
-
     put:
       summary: Update Transaction State
       operationId: updateTransactionState
@@ -969,6 +1002,10 @@ paths:
                         type: string
                       enableStateUpdate:
                         type: boolean
+                      configDate:
+                        type: string
+                        format: date-time
+                        description: ISO 8601 date time format in UTC
                     required:
                       - accessToken
                       - token
@@ -1772,6 +1809,8 @@ components:
           type: string
           example: '2020-10-15T15:07:36'
           description: 'Local Date of the entity starting the transaction, in ISO 8601 local format (yyyy-MM-dd’T’HH:mm:ss)'
+        configVersions:
+          $ref: '#/components/schemas/ConfigVersions'
       required:
         - posTransactionId
         - currency
@@ -1804,6 +1843,8 @@ components:
         waitingForConfirmation:
           type: boolean
           description: Set to true if the backend is waiting for confirmation from the terminal
+        configVersions:
+          $ref: '#/components/schemas/ConfigVersions'
         transactionRequestDetails:
           $ref: '#/components/schemas/TransactionRequestDetails'
     ApiResponse:
@@ -1851,6 +1892,10 @@ components:
               type: string
             enableStateUpdate:
               type: boolean
+            createDate:
+              type: string
+              format: date-time
+              description: ISO 8601 date time format in UTC
     AuthDeviceResponse:
       title: AuthDeviceResponse
       type: object
@@ -1978,7 +2023,19 @@ components:
                 - Credit
                 - Debit
                 - Unknown
-
+    ConfigVersions:
+      title: ConfigVersions
+      type: object
+      properties:
+        loan:
+          type: integer
+          format: int64
+    ConfirmTransactionRequest:
+      title: ConfirmTransactionRequest
+      type: object
+      properties:
+        configVersions:
+          $ref: '#/components/schemas/ConfigVersions'
   securitySchemes:
     Authorization:
       type: http
