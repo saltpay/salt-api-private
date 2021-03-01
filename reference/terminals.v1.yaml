@@ -2030,12 +2030,16 @@ components:
         loan:
           type: integer
           format: int64
+      required:
+        - loan
     ConfirmTransactionRequest:
       title: ConfirmTransactionRequest
       type: object
       properties:
         configVersions:
           $ref: '#/components/schemas/ConfigVersions'
+      required:
+        - configVersions
   securitySchemes:
     Authorization:
       type: http
