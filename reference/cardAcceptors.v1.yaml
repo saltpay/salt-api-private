@@ -198,6 +198,26 @@ paths:
               $ref: '#/components/schemas/CardAcceptorUpdateRequest'
       tags:
         - admin
+  '/card_acceptors/{cardAcceptorGuid}/loyalty_program':
+    parameters:
+      - schema:
+          type: string
+        name: cardAcceptorGuid
+        in: path
+        required: true
+    delete:
+      summary: Unlink Loyalty Program
+      operationId: unlinkCardAcceptorLoyalty
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Card Acceptor not found
+      tags:
+        - admin
+      description: This call can be made with an ADMIN or ONBOARDING application JWT to clear the loyalty program and related configuration from the card acceptor.
+      security:
+        - Authorization: []
 components:
   schemas:
     CardAcceptorDetails:
