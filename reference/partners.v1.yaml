@@ -188,6 +188,24 @@ components:
           type: boolean
         enrol:
           type: boolean
+    DatedFeatureConfig:
+      title: DatedFeatureConfig
+      type: object
+      properties:
+        configDate:
+          type: string
+          description: ISO 8601 date time format in UTC
+        loans:
+          type: boolean
+        loyalty:
+          type: boolean
+        payByLink:
+          type: boolean
+        taxFree:
+          type: boolean
+        loyaltyFeatureConfig:
+          $ref: '#/components/schemas/LoyaltyFeatureConfig'
+      description: 'Extends FeatureConfig to include the date and time it was generated. This is only used when providing the resolved feature configuration to the terminal. '
   securitySchemes:
     Authorization:
       type: http

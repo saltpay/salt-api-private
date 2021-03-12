@@ -1007,7 +1007,7 @@ paths:
                         format: date-time
                         description: ISO 8601 date time format in UTC
                       featureConfig:
-                        $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
+                        $ref: ./partners.v1.yaml#/components/schemas/DatedFeatureConfig
                     required:
                       - accessToken
                       - token
@@ -1891,7 +1891,7 @@ components:
               format: date-time
               description: ISO 8601 date time format in UTC
             featureConfig:
-              $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
+              $ref: ./partners.v1.yaml#/components/schemas/DatedFeatureConfig
     AuthDeviceResponse:
       title: AuthDeviceResponse
       type: object
