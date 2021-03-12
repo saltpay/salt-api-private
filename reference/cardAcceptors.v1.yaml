@@ -187,21 +187,15 @@ paths:
             application/json:
               schema:
                 $ref: ./terminals.v1.yaml#/components/schemas/ApiResponse
-      description: 'Update the card acceptor record with latest details needed by the terminal. This includes the optional Loyalty Program details. If Loyalty Program details are provided, this call will operate within a transaction, during which it will also call the Loyalty Gateway service to update its Card Acceptor with the Loyalty Program linked to the Card Acceptor. If this call fails, the change will be rolled back.'
+      description: |-
+        Update the card acceptor record with latest details needed by the terminal. This includes the optional Loyalty Program details. If Loyalty Program details are provided, this call will operate within a transaction, during which it will also call the Loyalty Gateway service to update its Card Acceptor with the Loyalty Program linked to the Card Acceptor. If this call fails, the change will be rolled back.
+
+        When updating the featureConfig field, the entire field must be provided as the entire field will be replaced if it is present.
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                switchAccessToken:
-                  type: string
-                name:
-                  type: string
-                loyaltyProgramGuid:
-                  type: string
-                loyaltyAccessToken:
-                  type: string
+              $ref: '#/components/schemas/CardAcceptorUpdateRequest'
       tags:
         - admin
 components:
@@ -229,6 +223,8 @@ components:
           type: string
         state:
           type: string
+        featureConfig:
+          $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
     CardAcceptorCreateDetails:
       title: CardAcceptorCreateDetails
       type: object
@@ -272,6 +268,8 @@ components:
           type: string
         state:
           type: string
+        featureConfig:
+          $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
     CardAcceptorInfoListResponse:
       title: CardAcceptorInfoListResponse
       type: object
@@ -284,6 +282,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CardAcceptorInfo'
+    CardAcceptorUpdateRequest:
+      title: CardAcceptorUpdateRequest
+      type: object
+      properties:
+        switchAccessToken:
+          type: string
+        name:
+          type: string
+        loyaltyProgramGuid:
+          type: string
+        loyaltyAccessToken:
+          type: string
+        featureConfig:
+          $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
   securitySchemes:
     Authorization:
       type: http

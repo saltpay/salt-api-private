@@ -963,7 +963,7 @@ paths:
       operationId: refreshJWT
       responses:
         '200':
-          description: OK
+          description: 'Successful refresh. If config is requested, all config shall be provided.'
           content:
             application/json:
               schema:
@@ -1006,6 +1006,8 @@ paths:
                         type: string
                         format: date-time
                         description: ISO 8601 date time format in UTC
+                      featureConfig:
+                        $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
                     required:
                       - accessToken
                       - token
@@ -1123,20 +1125,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TerminalDetailsResponse'
-      description: 'Update terminal information, currently only allowing the update of description, name and state'
+      description: 'Update limited terminal information. When updating the featureConfig field, the entire field must be provided as the entire field will be replaced if it is present.'
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                description:
-                  type: string
-                state:
-                  type: string
-                  enum:
-                    - active
-                    - inactive
+              $ref: '#/components/schemas/TerminalUpdateRequest'
       tags:
         - admin
       security:
@@ -1896,6 +1890,8 @@ components:
               type: string
               format: date-time
               description: ISO 8601 date time format in UTC
+            featureConfig:
+              $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
     AuthDeviceResponse:
       title: AuthDeviceResponse
       type: object
@@ -1933,6 +1929,8 @@ components:
           type: string
         state:
           type: string
+        featureConfig:
+          $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
     TerminalDetailsResponse:
       title: TerminalDetailsResponse
       type: object
@@ -2040,6 +2038,19 @@ components:
           $ref: '#/components/schemas/ConfigVersions'
       required:
         - configVersions
+    TerminalUpdateRequest:
+      title: TerminalUpdateRequest
+      type: object
+      properties:
+        description:
+          type: string
+        state:
+          type: string
+          enum:
+            - active
+            - inactive
+        featureConfig:
+          $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
   securitySchemes:
     Authorization:
       type: http

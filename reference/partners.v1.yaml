@@ -70,7 +70,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PartnerResponse'
-      description: Update the properties of a Partner.
+      description: 'Update the properties of a Partner. When updating the featureConfig field, the entire field must be provided as the entire field will be replaced if it is present.'
       requestBody:
         content:
           application/json:
@@ -78,6 +78,13 @@ paths:
               $ref: '#/components/schemas/PartnerProperties'
       tags:
         - admin
+  '/partners/{partnerGuid}/feature_config':
+    parameters:
+      - schema:
+          type: string
+        name: partnerGuid
+        in: path
+        required: true
 components:
   schemas:
     PartnerProperties:
@@ -98,6 +105,8 @@ components:
           type: string
         deregisterTerminalTemplateId:
           type: string
+        featureConfig:
+          $ref: '#/components/schemas/FeatureConfig'
     Partner:
       title: Partner
       type: object
@@ -118,15 +127,17 @@ components:
           type: string
         deregisterTerminalTemplateId:
           type: string
+        featureConfig:
+          $ref: '#/components/schemas/FeatureConfig'
       required:
         - guid
+        - name
         - pushNotificationApiKey
         - emailSenderApiKey
         - emailSender
         - registerCardAcceptorTemplateId
         - registerTerminalTemplateId
         - deregisterTerminalTemplateId
-        - name
     PartnerResponse:
       title: PartnerResponse
       type: object
@@ -155,6 +166,32 @@ components:
       required:
         - code
         - message
+    FeatureConfig:
+      title: FeatureConfig
+      type: object
+      properties:
+        loans:
+          type: boolean
+        loyalty:
+          type: boolean
+        payByLink:
+          type: boolean
+        taxFree:
+          type: boolean
+        loyaltyFeatureConfig:
+          $ref: '#/components/schemas/LoyaltyFeatureConfig'
+    LoyaltyFeatureConfig:
+      title: LoyaltyFeatureConfig
+      type: object
+      properties:
+        redeem:
+          type: boolean
+        enrol:
+          type: boolean
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
 tags:
   - name: admin
     description: Administer the terminals managed by the service
