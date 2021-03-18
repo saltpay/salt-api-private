@@ -2009,6 +2009,30 @@ components:
                 - Credit
                 - Debit
                 - Unknown
+    LoanOption:
+      title: LoanOption
+      type: object
+      properties:
+        loanOptionId:
+          type: integer
+          format: int64
+        interestRate:
+          type: number
+        numberOfPayments:
+          type: integer
+    LoanConfig:
+      title: LoanConfig
+      type: object
+      properties:
+        version:
+          type: integer
+          format: int64
+        loanOptionsList:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoanOption'
+      required:
+        - version
     ConfigVersions:
       title: ConfigVersions
       type: object
@@ -2158,6 +2182,8 @@ components:
           type: boolean
         config:
           $ref: '#/components/schemas/TerminalConfig'
+        loanConfig:
+          $ref: '#/components/schemas/LoanConfig'
   securitySchemes:
     Authorization:
       type: http
