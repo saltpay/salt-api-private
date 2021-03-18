@@ -191,10 +191,11 @@ components:
     DatedFeatureConfig:
       title: DatedFeatureConfig
       type: object
+      description: 'Extends FeatureConfig to include the date and time it was generated. This is only used when providing the resolved feature configuration to the terminal, either via token/refresh calls, or in a push mnotification.'
       properties:
         configDate:
           type: string
-          description: ISO 8601 date time format in UTC
+          description: ISO 8601 date time format in UTC when this config was generated
         loans:
           type: boolean
         loyalty:
@@ -205,7 +206,6 @@ components:
           type: boolean
         loyaltyFeatureConfig:
           $ref: '#/components/schemas/LoyaltyFeatureConfig'
-      description: 'Extends FeatureConfig to include the date and time it was generated. This is only used when providing the resolved feature configuration to the terminal. '
   securitySchemes:
     Authorization:
       type: http

@@ -967,51 +967,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                  message:
-                    type: string
-                  refreshTokenDetails:
-                    type: object
-                    properties:
-                      accessToken:
-                        type: string
-                      token:
-                        type: string
-                      refreshToken:
-                        type: string
-                      cardAcceptorGuid:
-                        type: string
-                      switchAccessToken:
-                        type: string
-                      managerPinSet:
-                        type: boolean
-                      cardAcceptorName:
-                        type: string
-                      mid:
-                        type: string
-                      terminalGuid:
-                        type: string
-                      enableLoyaltyRedeem:
-                        type: boolean
-                      enableLoyaltyEnrolment:
-                        type: boolean
-                      posName:
-                        type: string
-                      enableStateUpdate:
-                        type: boolean
-                      configDate:
-                        type: string
-                        format: date-time
-                        description: ISO 8601 date time format in UTC
-                      featureConfig:
-                        $ref: ./partners.v1.yaml#/components/schemas/DatedFeatureConfig
-                    required:
-                      - accessToken
-                      - token
-                      - refreshToken
+                $ref: '#/components/schemas/AuthRefreshResponse'
       description: Retrieve a new valid JWT using a valid Refresh Token retrieved previously
       requestBody:
         content:
@@ -1385,6 +1341,24 @@ paths:
             type: string
           in: query
           name: locale
+  /dummy/push:
+    post:
+      summary: Push Notification Structure
+      operationId: pushNotificationStructure
+      responses:
+        '200':
+          description: OK
+      description: This is a dummy endpoint in the API spec purely to expose documentation of the structure of the push notification object
+      tags:
+        - terminal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PushNotification'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PushNotification'
 components:
   schemas:
     TransactionDetailsSummary:
@@ -1853,7 +1827,7 @@ components:
     AuthTokenResponse:
       title: AuthTokenResponse
       type: object
-      description: ''
+      description: In an AuthTokenResponse all config sections will be provided. The action will always be "UPDATE"
       properties:
         code:
           type: integer
@@ -1868,30 +1842,44 @@ components:
               type: string
             terminalGuid:
               type: string
+              description: Deprecated
             switchAccessToken:
               type: string
+              description: Deprecated
             cardAcceptorGuid:
               type: string
+              description: Deprecated
             managerPinSet:
               type: boolean
+              description: Deprecated
             cardAcceptorName:
               type: string
+              description: Deprecated
             mid:
               type: string
+              description: Deprecated
             enableLoyaltyRedeem:
               type: boolean
+              description: Deprecated
             enableLoyaltyEnrolment:
               type: boolean
+              description: Deprecated
             posName:
               type: string
+              description: Deprecated
             enableStateUpdate:
               type: boolean
+              description: Deprecated
             createDate:
               type: string
               format: date-time
-              description: ISO 8601 date time format in UTC
-            featureConfig:
-              $ref: ./partners.v1.yaml#/components/schemas/DatedFeatureConfig
+              description: ISO 8601 date time format in UTC - Deprecated
+            config:
+              $ref: '#/components/schemas/TerminalConfig'
+          required:
+            - accessToken
+            - refreshToken
+            - config
     AuthDeviceResponse:
       title: AuthDeviceResponse
       type: object
@@ -2051,6 +2039,125 @@ components:
             - inactive
         featureConfig:
           $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
+    TerminalConfig:
+      title: TerminalConfig
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+            - UPDATE
+            - UNLINK
+            - DISABLE_FEATURE
+        mid:
+          type: string
+        partnerGuid:
+          type: string
+        cardAcceptorGuid:
+          type: string
+        terminalGuid:
+          type: string
+        cardAcceptorConfig:
+          $ref: '#/components/schemas/DatedCardAcceptorConfig'
+        featureConfig:
+          $ref: ./partners.v1.yaml#/components/schemas/DatedFeatureConfig
+      required:
+        - action
+    DatedCardAcceptorConfig:
+      title: DatedCardAcceptorConfig
+      type: object
+      properties:
+        configDate:
+          type: string
+          description: ISO 8601 date time format in UTC when this config was generated
+        switchAccessToken:
+          type: string
+        managerPinSet:
+          type: boolean
+        posName:
+          type: string
+        enableStateUpdate:
+          type: boolean
+        cardAcceptorName:
+          type: string
+      required:
+        - configDate
+        - switchAccessToken
+        - managerPinSet
+        - enableStateUpdate
+        - cardAcceptorName
+    AuthRefreshResponse:
+      title: AuthRefreshResponse
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        refreshTokenDetails:
+          type: object
+          properties:
+            accessToken:
+              type: string
+            token:
+              type: string
+              description: Deprecated
+            refreshToken:
+              type: string
+            cardAcceptorGuid:
+              type: string
+              description: Deprecated
+            switchAccessToken:
+              type: string
+              description: Deprecated
+            managerPinSet:
+              type: boolean
+              description: Deprecated
+            cardAcceptorName:
+              type: string
+              description: Deprecated
+            mid:
+              type: string
+              description: Deprecated
+            terminalGuid:
+              type: string
+              description: Deprecated
+            enableLoyaltyRedeem:
+              type: boolean
+              description: Deprecated
+            enableLoyaltyEnrolment:
+              type: boolean
+              description: Deprecated
+            posName:
+              type: string
+              description: Deprecated
+            enableStateUpdate:
+              type: boolean
+              description: Deprecated
+            configDate:
+              type: string
+              format: date-time
+              description: ISO 8601 date time format in UTC - Deprecated
+            config:
+              $ref: '#/components/schemas/TerminalConfig'
+          required:
+            - accessToken
+            - refreshToken
+      description: In an AuthRefreshResponse all config sections will be provided. The action will always be "UPDATE"
+    PushNotification:
+      title: PushNotification
+      type: object
+      properties:
+        transactionId:
+          type: string
+        transactionRequestId:
+          type: string
+        payByLinkCount:
+          type: integer
+        isBroadcast:
+          type: boolean
+        config:
+          $ref: '#/components/schemas/TerminalConfig'
   securitySchemes:
     Authorization:
       type: http
