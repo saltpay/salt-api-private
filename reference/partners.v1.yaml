@@ -188,6 +188,7 @@ components:
           type: boolean
         enrol:
           type: boolean
+      description: Finer grained feature configuration for loyalty
     DatedFeatureConfig:
       title: DatedFeatureConfig
       type: object
