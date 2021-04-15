@@ -218,6 +218,25 @@ paths:
       description: This call can be made with an ADMIN or ONBOARDING application JWT to clear the loyalty program and related configuration from the card acceptor.
       security:
         - Authorization: []
+  '/card_acceptors/{cardAcceptorGuid}/pos':
+    parameters:
+      - schema:
+          type: string
+        name: cardAcceptorGuid
+        in: path
+        required: true
+    delete:
+      summary: Unlink POS
+      operationId: unlinkCardAcceptorPos
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Card Acceptor not found
+      description: 'This call can be made with an ADMIN or ONBOARDING application JWT to clear the POS related configuration from the card acceptor. If there is no POS, return 200 OK.'
+      parameters: []
+      security:
+        - Authorization: []
 components:
   schemas:
     CardAcceptorDetails:
