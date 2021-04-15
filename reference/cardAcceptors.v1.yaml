@@ -237,6 +237,8 @@ paths:
       parameters: []
       security:
         - Authorization: []
+      tags:
+        - admin
 components:
   schemas:
     CardAcceptorDetails:
