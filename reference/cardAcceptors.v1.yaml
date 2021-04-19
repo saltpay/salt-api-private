@@ -247,7 +247,7 @@ paths:
         in: path
         required: true
     post:
-      summary: ''
+      summary: Add Authorised Card Acceptor
       operationId: addAuthorisedCardAcceptors
       responses:
         '200':
@@ -267,7 +267,7 @@ paths:
             schema:
               $ref: ./models.v1.yaml#/components/schemas/AuthorisedCardAcceptorRequest
     get:
-      summary: ''
+      summary: Get Authorised Card Acceptors
       operationId: getAuthorisedCardAcceptors
       responses:
         '200':
@@ -306,7 +306,7 @@ paths:
         in: path
         required: true
     delete:
-      summary: ''
+      summary: Remove Authorised Card Acceptor
       operationId: removeAuthorisedCardAcceptor
       responses:
         '200':

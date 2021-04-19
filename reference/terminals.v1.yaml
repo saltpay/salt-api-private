@@ -896,7 +896,7 @@ paths:
         - Authorization: []
   /terminals/auth/token:
     post:
-      summary: Retrieve Auth Details
+      summary: Retrieve Access Token
       operationId: retrieveAuthCredentials
       responses:
         '200':
@@ -994,7 +994,7 @@ paths:
           name: locale
   /terminals/auth/refresh:
     post:
-      summary: Request new JWT based on valid Refresh Token
+      summary: Refresh Access Token
       operationId: refreshJWT
       responses:
         '200':
