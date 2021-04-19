@@ -239,6 +239,93 @@ paths:
         - Authorization: []
       tags:
         - admin
+  '/card_acceptors/{cardAcceptorGuid}/authorised_card_acceptors':
+    parameters:
+      - schema:
+          type: string
+        name: cardAcceptorGuid
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: addAuthorisedCardAcceptors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./models.v1.yaml#/components/schemas/ApiResponse
+      description: This call can be made with an ADMIN or ONBOARDING application JWT to add an authorised card acceptor for the owner card acceptor as identified in the path.
+      tags:
+        - admin
+      security:
+        - Authorization: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ./models.v1.yaml#/components/schemas/AuthorisedCardAcceptorRequest
+    get:
+      summary: ''
+      operationId: getAuthorisedCardAcceptors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./models.v1.yaml#/components/schemas/AuthorisedCardAcceptorListResponse
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: ./models.v1.yaml#/components/schemas/ApiResponse
+        '404':
+          description: Owner Card Acceptor Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ./models.v1.yaml#/components/schemas/ApiResponse
+      security:
+        - Authorization: []
+      description: This call can be made with an ADMIN or ONBOARDING application JWT to retrieve the list of authorised card acceptors for an owner card acceptor as identified in the path.
+      tags:
+        - admin
+  '/card_acceptors/{cardAcceptorGuid}/authorised_card_acceptors/{authorisedCardAcceptorGuid}':
+    parameters:
+      - schema:
+          type: string
+        name: cardAcceptorGuid
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: authorisedCardAcceptorGuid
+        in: path
+        required: true
+    delete:
+      summary: ''
+      operationId: removeAuthorisedCardAcceptor
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ./models.v1.yaml#/components/schemas/ApiResponse
+        '404':
+          description: 'Owner or Authorised Card Acceptor Not Found. However, these cases will have different response codes.'
+          content:
+            application/json:
+              schema:
+                $ref: ./models.v1.yaml#/components/schemas/ApiResponse
+      tags:
+        - admin
+      description: This call can be made with an ADMIN or ONBOARDING application JWT to remove an authorised card acceptor for the owner card acceptor as identified in the path.
+      security:
+        - Authorization: []
 components:
   schemas:
     CardAcceptorDetails:

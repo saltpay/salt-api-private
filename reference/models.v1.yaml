@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: models
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths: {}
+components:
+  schemas:
+    AuthorisedCardAcceptorRequest:
+      title: AuthorisedCardAcceptorRequest
+      type: object
+      properties:
+        authorisedCardAcceptorGuid:
+          type: string
+    AuthorisedCardAcceptor:
+      title: AuthorisedCardAcceptor
+      type: object
+      properties:
+        authorisedCardAcceptorGuid:
+          type: string
+        name:
+          type: string
+      required:
+        - authorisedCardAcceptorGuid
+    OwnerAuthorisedCardAcceptor:
+      title: OwnerAuthorisedCardAcceptor
+      type: object
+      description: Extends AuthorisedCardAcceptor to include the (owner) card acceptor that authorised the authorised card acceptor.
+      properties:
+        cardAcceptorGuid:
+          type: string
+        authorisedCardAcceptorGuid:
+          type: string
+          description: Inheritted
+      required:
+        - cardAcceptorGuid
+        - authorisedCardAcceptorGuid
+    ApiResponse:
+      title: ApiResponse
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      required:
+        - code
+        - message
+    AuthorisedCardAcceptorListResponse:
+      title: AuthorisedCardAcceptorListResponse
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        authorisedCardAcceptorList:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorisedCardAcceptor'
+      required:
+        - code
+        - message
