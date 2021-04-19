@@ -2151,6 +2151,10 @@ components:
           type: boolean
         cardAcceptorName:
           type: string
+        authorisedCardAcceptorList:
+          type: array
+          items:
+            $ref: ./models.v1.yaml#/components/schemas/AuthorisedCardAcceptor
       required:
         - configDate
         - switchAccessToken

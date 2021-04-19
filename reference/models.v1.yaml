@@ -21,6 +21,8 @@ components:
           type: string
         name:
           type: string
+        mid:
+          type: string
       required:
         - authorisedCardAcceptorGuid
     OwnerAuthorisedCardAcceptor:
