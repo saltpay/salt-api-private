@@ -290,7 +290,7 @@ paths:
                 $ref: ./models.v1.yaml#/components/schemas/ApiResponse
       security:
         - Authorization: []
-      description: This call can be made with an ADMIN or ONBOARDING application JWT to retrieve the list of authorised card acceptors for an owner card acceptor as identified in the path.
+      description: This call can be made with an ADMIN or ONBOARDING application JWT to retrieve the list of active authorised card acceptors for an owner card acceptor as identified in the path.
       tags:
         - admin
   '/card_acceptors/{cardAcceptorGuid}/authorised_card_acceptors/{authorisedCardAcceptorGuid}':
@@ -323,7 +323,7 @@ paths:
                 $ref: ./models.v1.yaml#/components/schemas/ApiResponse
       tags:
         - admin
-      description: This call can be made with an ADMIN or ONBOARDING application JWT to remove an authorised card acceptor for the owner card acceptor as identified in the path.
+      description: This call can be made with an ADMIN or ONBOARDING application JWT to disable an authorised card acceptor for the owner card acceptor as identified in the path. The entry is not removed from the database as this would cause issues with data replication and reporting. Instead the entry's state is marked as inactive.
       security:
         - Authorization: []
 components:
