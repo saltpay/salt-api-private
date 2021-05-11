@@ -1685,7 +1685,7 @@ components:
           minLength: 2
           maxLength: 2
           example: '00'
-          description: 'a.k.a "Issuer Response Code". 2 Character string describing the result of the transaction i.e. "Success" (usually "00"), declined, failed etc'
+          description: 2 Character alpha-numeric string describing the ISO8583 result of the card transaction
       required:
         - state
         - posTransactionId
