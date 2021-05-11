@@ -37,6 +37,16 @@ paths:
                   type: string
                 switchAccessToken:
                   type: string
+                address:
+                  $ref: '#/components/schemas/Address'
+                subDivision:
+                  type: string
+                country:
+                  type: string
+                phoneNumber:
+                  type: string
+                mcc:
+                  type: integer
               required:
                 - acquirer
                 - mid
@@ -398,6 +408,16 @@ components:
           type: string
         featureConfig:
           $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
+        address:
+          $ref: '#/components/schemas/Address'
+        subDivision:
+          type: string
+        country:
+          type: string
+        phoneNumber:
+          type: string
+        mcc:
+          type: integer
     CardAcceptorInfoListResponse:
       title: CardAcceptorInfoListResponse
       type: object
@@ -424,6 +444,29 @@ components:
           type: string
         featureConfig:
           $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
+        address:
+          $ref: '#/components/schemas/Address'
+        subDivision:
+          type: string
+        country:
+          type: string
+        phoneNumber:
+          type: string
+        mcc:
+          type: integer
+    Address:
+      title: Address
+      type: object
+      description: Object describing a CardAcceptor/Merchant's physical address
+      properties:
+        line1:
+          type: string
+        line2:
+          type: string
+        city:
+          type: string
+        postalCode:
+          type: string
   securitySchemes:
     Authorization:
       type: http
