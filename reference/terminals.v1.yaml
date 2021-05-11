@@ -1680,6 +1680,12 @@ components:
           type: string
           example: '2020-10-15T15:07:36'
           description: 'Local Date of the entity starting the transaction, in ISO 8601 local format (yyyy-MM-dd’T’HH:mm:ss)'
+        cardResponseCode:
+          type: string
+          minLength: 2
+          maxLength: 2
+          example: '00'
+          description: 'a.k.a "Issuer Response Code". 2 Character string describing the result of the transaction i.e. "Success" (usually "00"), declined, failed etc'
       required:
         - state
         - posTransactionId
