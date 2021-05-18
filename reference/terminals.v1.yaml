@@ -2161,6 +2161,8 @@ components:
           type: array
           items:
             $ref: ./models.v1.yaml#/components/schemas/AuthorisedCardAcceptor
+        address:
+          $ref: ./cardAcceptors.v1.yaml#/components/schemas/Address
       required:
         - configDate
         - switchAccessToken
