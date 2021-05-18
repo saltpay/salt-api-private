@@ -1686,6 +1686,14 @@ components:
           maxLength: 2
           example: '00'
           description: 2 Character alpha-numeric string describing the ISO8583 result of the card transaction
+        tid:
+          type: string
+        emvData:
+          $ref: '#/components/schemas/EmvData'
+        signatureUrl:
+          type: string
+        rrn:
+          type: string
       required:
         - state
         - posTransactionId
@@ -2243,6 +2251,20 @@ components:
           $ref: '#/components/schemas/TerminalConfig'
         loanConfig:
           $ref: '#/components/schemas/LoanConfig'
+    EmvData:
+      title: EmvData
+      type: object
+      properties:
+        aid:
+          type: string
+        arc:
+          type: string
+        iad:
+          type: string
+        tsi:
+          type: string
+        tvr:
+          type: string
   securitySchemes:
     Authorization:
       type: http
