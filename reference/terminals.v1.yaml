@@ -941,9 +941,7 @@ paths:
                 clientId:
                   type: string
                 versions:
-                  type: object
-                  items:
-                    $ref: '#/components/schemas/VersionNumbers'
+                  $ref: '#/components/schemas/VersionNumbers'
               required:
                 - deviceCode
                 - clientId
@@ -1019,9 +1017,7 @@ paths:
                 requireConfig:
                   type: boolean
                 versions:
-                  type: object
-                  items:
-                    $ref: '#/components/schemas/VersionNumbers'
+                  $ref: '#/components/schemas/VersionNumbers'
               required:
                 - refreshToken
       tags:
