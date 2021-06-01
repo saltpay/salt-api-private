@@ -445,11 +445,11 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
       operationId: getTransactionRequest
       description: |-
-        Get all the available details of the transaction request. If a cardAcceptor and/or pos guid are provided, they will be validated as existing. 
+        Get all the available details of the transaction request. If a cardAcceptor and/or pos guid are provided, they will be validated as existing.
 
-        If a cardAcceptorGuid is provided and it is an authorised card acceptor, the posGuid will be required and will be validated as matching the pos guid of the authorised card acceptor. 
+        If a cardAcceptorGuid is provided and it is an authorised card acceptor, the posGuid will be required and will be validated as matching the pos guid of the authorised card acceptor.
 
-        If a cardAcceptorGuid is provided and it is not an authorised card acceptor, it must match the cardAcceptor of the terminal and the posGuid shall be ignored.  
+        If a cardAcceptorGuid is provided and it is not an authorised card acceptor, it must match the cardAcceptor of the terminal and the posGuid shall be ignored.
 
         If no cardAcceptorGuid is provided, the cardAcceptor of the terminal shall be used and the posGuid shall be ignored.
       security:
@@ -818,11 +818,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
       description: |-
-        Update the state of the transaction. If a card acceptor and/or pos guid are provided, they will be validated as existing. 
+        Update the state of the transaction. If a card acceptor and/or pos guid are provided, they will be validated as existing.
 
-        If a cardAcceptorGuid is provided and it is an authorised card acceptor, the posGuid will be required and will be validated as matching the pos guid of the authorised card acceptor. 
+        If a cardAcceptorGuid is provided and it is an authorised card acceptor, the posGuid will be required and will be validated as matching the pos guid of the authorised card acceptor.
 
-        If a cardAcceptorGuid is provided and it is not an authorised card acceptor, it must match the cardAcceptor of the terminal and the posGuid shall be ignored.  
+        If a cardAcceptorGuid is provided and it is not an authorised card acceptor, it must match the cardAcceptor of the terminal and the posGuid shall be ignored.
 
         If no cardAcceptorGuid is provided, the cardAcceptor of the terminal shall be used and the posGuid shall be ignored.
       security:
@@ -940,6 +940,10 @@ paths:
                   type: string
                 clientId:
                   type: string
+                versions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/VersionNumbers'
               required:
                 - deviceCode
                 - clientId
@@ -1014,6 +1018,10 @@ paths:
                   type: string
                 requireConfig:
                   type: boolean
+                versions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/VersionNumbers'
               required:
                 - refreshToken
       tags:
@@ -2124,6 +2132,18 @@ components:
             - inactive
         featureConfig:
           $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
+    VersionNumbers:
+      title: VersionNumbers
+      type: object
+      properties:
+        appVersion:
+          type: string
+        firmwareVersion:
+          type: string
+        cardSdkVersion:
+          type: string
+        otherVersions:
+          type: object
     TerminalConfig:
       title: TerminalConfig
       type: object
