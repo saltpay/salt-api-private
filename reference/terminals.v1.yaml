@@ -941,7 +941,7 @@ paths:
                 clientId:
                   type: string
                 versions:
-                  type: array
+                  type: object
                   items:
                     $ref: '#/components/schemas/VersionNumbers'
               required:
@@ -1019,7 +1019,7 @@ paths:
                 requireConfig:
                   type: boolean
                 versions:
-                  type: array
+                  type: object
                   items:
                     $ref: '#/components/schemas/VersionNumbers'
               required:
@@ -1988,6 +1988,8 @@ components:
           type: string
         featureConfig:
           $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
+        versions:
+          $ref: '#/components/schemas/VersionNumbers'
     TerminalDetailsResponse:
       title: TerminalDetailsResponse
       type: object
