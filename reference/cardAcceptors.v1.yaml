@@ -78,10 +78,6 @@ paths:
         - schema:
             type: string
           in: query
-          name: acquirer
-        - schema:
-            type: string
-          in: query
           name: mid
       tags:
         - pos
@@ -431,7 +427,7 @@ components:
           type: integer
         message:
           type: string
-        cardAcceptorList:
+        cardAcceptorDetailsList:
           type: array
           items:
             $ref: '#/components/schemas/CardAcceptorInfo'
