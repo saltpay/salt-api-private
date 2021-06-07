@@ -78,10 +78,6 @@ paths:
         - schema:
             type: string
           in: query
-          name: acquirer
-        - schema:
-            type: string
-          in: query
           name: mid
       tags:
         - pos
@@ -177,6 +173,8 @@ paths:
       description: Update the pin for a specific card acceptor
       tags:
         - admin
+      security:
+        - Authorization: []
   '/card_acceptors/{cardAcceptorGuid}':
     parameters:
       - schema:
@@ -431,7 +429,7 @@ components:
           type: integer
         message:
           type: string
-        cardAcceptorList:
+        cardAcceptorDetailsList:
           type: array
           items:
             $ref: '#/components/schemas/CardAcceptorInfo'
