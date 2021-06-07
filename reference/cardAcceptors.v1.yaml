@@ -173,6 +173,8 @@ paths:
       description: Update the pin for a specific card acceptor
       tags:
         - admin
+      security:
+        - Authorization: []
   '/card_acceptors/{cardAcceptorGuid}':
     parameters:
       - schema:
