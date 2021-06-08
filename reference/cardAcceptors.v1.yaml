@@ -437,18 +437,6 @@ components:
           type: string
         featureConfig:
           $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
-        address:
-          $ref: '#/components/schemas/Address'
-        subDivision:
-          type: string
-          description: 'ISO 3166-2 Standard Sub Division '
-          maxLength: 10
-        country:
-          type: string
-        phoneNumber:
-          type: string
-        mcc:
-          type: integer
     CardAcceptorInfoListResponse:
       title: CardAcceptorInfoListResponse
       type: object
