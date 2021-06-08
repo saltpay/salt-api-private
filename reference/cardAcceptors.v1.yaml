@@ -59,7 +59,7 @@ paths:
         - admin
     parameters: []
     get:
-      summary: ''
+      summary: Get Card Acceptors
       operationId: getCardAcceptors
       responses:
         '200':
@@ -80,7 +80,7 @@ paths:
           in: query
           name: mid
       tags:
-        - pos
+        - admin
   '/card_acceptors/{cardAcceptorGuid}/manager_pin':
     parameters:
       - schema:
@@ -209,6 +209,21 @@ paths:
               $ref: '#/components/schemas/CardAcceptorUpdateRequest'
       tags:
         - admin
+    get:
+      summary: Get Card Acceptor By Guid
+      operationId: getCardAcceptorByGuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardAcceptorDetailsResponse'
+      description: Get the full details of a single card acceptor using its guid. Only available to an ADMIN application.
+      tags:
+        - admin
+      security:
+        - Authorization: []
   '/card_acceptors/{cardAcceptorGuid}/loyalty_program':
     parameters:
       - schema:
@@ -364,6 +379,19 @@ components:
           type: string
         featureConfig:
           $ref: ./partners.v1.yaml#/components/schemas/FeatureConfig
+        address:
+          $ref: '#/components/schemas/Address'
+        subDivision:
+          type: string
+          description: 'ISO 3166-2 Standard Sub Division '
+          minLength: 1
+          maxLength: 10
+        country:
+          type: string
+        phoneNumber:
+          type: string
+        mcc:
+          type: integer
     CardAcceptorCreateDetails:
       title: CardAcceptorCreateDetails
       type: object
