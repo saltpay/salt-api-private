@@ -71,7 +71,7 @@ paths:
       description: |-
         Retrieve a list of card acceptors linked to the provided JWT. Optionally filtered by the fields provided.
 
-        Only supported for POS applications.
+        Only supported for POS, ADMIN and ONBOARDING applications.
       security:
         - Authorization: []
       parameters:
