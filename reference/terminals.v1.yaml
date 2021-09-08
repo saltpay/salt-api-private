@@ -1900,7 +1900,7 @@ components:
         refundable:
           type: boolean
         refundableAmount:
-          type: long
+          type: integer
         createDate:
           type: string
           description: createDate UTC timezone
@@ -2030,7 +2030,7 @@ components:
         refundable:
           type: boolean
         refundableAmount:
-          type: long
+          type: integer
         createDate:
           type: string
           description: createDate UTC timezone
