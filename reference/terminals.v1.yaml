@@ -601,7 +601,7 @@ paths:
         required: true
         description: Record MPAS card transaction from transaction request details
     post:
-      summary: Create Card Transaction
+      summary: Create MPAS Card Transaction
       operationId: createCardTransaction
       responses:
         '200':
@@ -712,7 +712,7 @@ paths:
         required: true
         description: Record MPAS card transaction details
     post:
-      summary: Record Card Transaction
+      summary: Record MPAS Card Transaction
       operationId: recordCardTransaction
       responses:
         '200':
