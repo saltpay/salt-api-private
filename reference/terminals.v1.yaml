@@ -581,6 +581,233 @@ paths:
             type: string
           in: query
           name: locale
+  '/terminals/{terminalGuid}/transaction_requests/{id}/card/mpas':
+    parameters:
+      - schema:
+          type: string
+        in: header
+        name: x-managerPinData
+        description: Needs to be validated only if request originates from Terminal and patch is for state reversing
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which the transaction took place
+      - schema:
+          type: integer
+        name: id
+        in: path
+        required: true
+        description: Record MPAS card transaction from transaction request details
+    post:
+      summary: Create Card Transaction
+      operationId: createCardTransaction
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTransactionDetailsResponse'
+        '400':
+          description: 'Bad request, when field validation fails.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      tags:
+        - terminal
+      description: 'Update the details of the transaction with the outcome of the terminal processing. '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                authCode:
+                  type: string
+                cardSchemeName:
+                  type: string
+                cardMaskedNumber:
+                  type: string
+                  maxLength: 19
+                cardToken:
+                  type: string
+                cardExpiry:
+                  type: string
+                  description: Formatted as MMYY
+                cardEntryMode:
+                  type: string
+                  enum:
+                    - ICC
+                    - MSR
+                    - CNP
+                    - UNDEFINED
+                    - CONTACTLESS_ICC
+                    - CONTACTLESS_MSR
+                    - ICC_FALLBACK_MSR
+                cardName:
+                  type: string
+                state:
+                  type: string
+                  enum:
+                    - APPROVED
+                    - DECLINED
+                    - CANCELLED
+                    - REVERSING
+                    - REVERSED
+                    - FAILED
+                    - PENDING
+                tipAmount:
+                  type: integer
+                totalAmount:
+                  type: integer
+                cardVerificationType:
+                  type: string
+                switchTransactionId:
+                  type: string
+                cardAcceptorReceipt:
+                  type: string
+                cardholderReceipt:
+                  type: string
+                accountType:
+                  type: string
+                  enum:
+                    - Credit
+                    - Debit
+                    - Unknown
+              required:
+                - state
+        description: |
+          The state must be provided in all update calls.
+          The card fields are required when the state is DECLINED or APPROVED.
+          The authCode field is required when the state is APPROVED.
+          No fields other than state should be provided when state is REVERSING or REVERSED.
+      security:
+        - Authorization: [ ]
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
+  '/terminals/{terminalGuid}/transaction_requests/card/mpas':
+    parameters:
+      - schema:
+          type: string
+        name: terminalGuid
+        in: path
+        required: true
+        description: Terminal ID of the terminal on which the transaction took place
+      - schema:
+          type: integer
+        name: id
+        in: path
+        required: true
+        description: Record MPAS card transaction details
+    post:
+      summary: Record Card Transaction
+      operationId: recordCardTransaction
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTransactionDetailsResponse'
+        '400':
+          description: 'Bad request, when field validation fails.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      tags:
+        - terminal
+      description: 'Record the details of the transaction with the outcome of the terminal processing. '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                authCode:
+                  type: string
+                cardSchemeName:
+                  type: string
+                cardName:
+                  type: string
+                cardMaskedNumber:
+                  type: string
+                  maxLength: 19
+                cardToken:
+                  type: string
+                cardExpiry:
+                  type: string
+                  description: Formatted as MMYY
+                cardEntryMode:
+                  type: string
+                  enum:
+                    - ICC
+                    - MSR
+                    - CNP
+                    - UNDEFINED
+                    - CONTACTLESS_ICC
+                    - CONTACTLESS_MSR
+                    - ICC_FALLBACK_MSR
+                state:
+                  type: string
+                  enum:
+                    - APPROVED
+                    - DECLINED
+                    - CANCELLED
+                    - REVERSING
+                    - REVERSED
+                    - FAILED
+                    - PENDING
+                tipAmount:
+                  type: integer
+                totalAmount:
+                  type: integer
+                cardVerificationType:
+                  type: string
+                switchTransactionId:
+                  type: string
+                cardAcceptorReceipt:
+                  type: string
+                cardholderReceipt:
+                  type: string
+                accountType:
+                  type: string
+                  enum:
+                    - Credit
+                    - Debit
+                    - Unknown
+              required:
+                - state
+        description: |
+          The state must be provided in all update calls.
+          The card fields are required when the state is DECLINED or APPROVED.
+          The authCode field is required when the state is APPROVED.
+          No fields other than state should be provided when state is REVERSING or REVERSED.
+      security:
+        - Authorization: [ ]
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: locale
   '/terminals/{terminalGuid}/transactions/{transactionId}/confirm':
     parameters:
       - schema:
@@ -1630,6 +1857,8 @@ components:
           maxLength: 19
         cardSchemeName:
           type: string
+        cardName:
+          type: string
         cardToken:
           type: string
         cardExpiry:
@@ -1666,6 +1895,12 @@ components:
           enum:
             - payment
             - refund
+        reversible:
+          type: boolean
+        refundable:
+          type: boolean
+        refundableAmount:
+          type: long
         createDate:
           type: string
           description: createDate UTC timezone
@@ -1768,6 +2003,8 @@ components:
                     - Unknown
                 cardSchemeName:
                   type: string
+                cardName:
+                  type: string
         posTransactionId:
           type: string
           description: Transaction ID as provided by the POS for support purposes.
@@ -1788,6 +2025,12 @@ components:
           enum:
             - payment
             - refund
+        reversible:
+          type: boolean
+        refundable:
+          type: boolean
+        refundableAmount:
+          type: long
         createDate:
           type: string
           description: createDate UTC timezone
@@ -2076,6 +2319,16 @@ components:
                 - Credit
                 - Debit
                 - Unknown
+            cardSchemeName:
+              type: string
+            cardEnrolled:
+              type: boolean
+            cardToken:
+              type: string
+            cardExpiry:
+              type: string
+            cardName:
+              type: string
     LoanOption:
       title: LoanOption
       type: object
