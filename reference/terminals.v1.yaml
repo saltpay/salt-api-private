@@ -1784,6 +1784,9 @@ components:
         posTransactionId:
           type: string
           description: Transaction ID as provided by the POS for support purposes.
+        acquirerTransactionId:
+          type: string
+          description: Transaction ID as provided by the Switch for support purposes.
         currency:
           type: string
           description: ISO 4217 Alpha-3 currency code
@@ -2008,6 +2011,9 @@ components:
         posTransactionId:
           type: string
           description: Transaction ID as provided by the POS for support purposes.
+        acquirerTransactionId:
+          type: string
+          description: Transaction ID as provided by the Switch for support purposes.
         currency:
           type: string
           description: ISO 4217 Alpha-3 currency code
