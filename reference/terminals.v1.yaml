@@ -713,7 +713,7 @@ paths:
       description: Record MPAS reversed card transaction from transaction request details
   post:
     summary: Record MPAS Reversed Card Transaction
-    operationId: reverseCardTransaction
+    operationId: reverseMpasCardTransaction
     responses:
       '200':
         description: OK
